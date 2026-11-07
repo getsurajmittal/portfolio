@@ -1,3 +1,4 @@
+[hidden]{display:none !important}
 :root{
   --bg:#F3F0E7; --ink:#161512; --sub:#4A4740; --rule:#C9C4B6;
   --grain:rgba(0,0,0,.045); --photo:#E4E0D4;
@@ -7,7 +8,7 @@
   --display:'Playfair Display',Georgia,serif;
   --old:'Old Standard TT',Georgia,serif;
   --sans:'Libre Franklin',system-ui,sans-serif;
-  --black:'UnifrakturMaguntia',serif;
+  --black:'Playfair Display',Georgia,serif;
 }
 :root[data-theme="night"]{
   --bg:#17160F; --ink:#E9E5DA; --sub:#B5B0A3; --rule:#45423A;
@@ -41,7 +42,7 @@ img{max-width:100%;display:block}
 .minibar.on{transform:none;opacity:1}
 .progress{height:3px;background:var(--red);transform-origin:left;transform:scaleX(0)}
 .minibar-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
-.mini-title{font:400 26px var(--black);text-decoration:none}
+.mini-title{font:900 24px var(--black);letter-spacing:-.01em;text-decoration:none}
 .mini-nav{display:flex;flex-wrap:wrap}
 .mini-nav a{min-height:44px;padding:0 10px;display:inline-flex;align-items:center;text-decoration:none;font:600 12px var(--sans);letter-spacing:.06em;text-transform:uppercase}
 .mini-nav a[aria-current="page"]{font-weight:800;box-shadow:inset 0 -3px 0 var(--red)}
@@ -51,7 +52,7 @@ img{max-width:100%;display:block}
 .ear{flex:1 1 180px;border:1px solid var(--ink);padding:8px 10px;font:600 11px/1.45 var(--sans);text-transform:uppercase;letter-spacing:.04em}
 .ear-r{text-align:right}
 .ear-h{font-weight:800;border-bottom:1px solid var(--ink);padding-bottom:3px;margin-bottom:4px}
-.masthead{flex:999 1 520px;margin:0;text-align:center;font:400 clamp(48px,8vw,96px)/1 var(--black)}
+.masthead{flex:999 1 520px;margin:0;text-align:center;font:900 clamp(44px,7.4vw,92px)/1 var(--black);letter-spacing:-.02em}
 .motto{text-align:center;font:italic 14px var(--old);margin:6px 0 8px}
 .dateline{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);padding:0 2px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;font:700 11px var(--sans);text-transform:uppercase;letter-spacing:.08em}
 .dateline-ctrls{display:flex;align-items:center;flex-wrap:wrap}
@@ -211,6 +212,8 @@ img{max-width:100%;display:block}
 #pagerNums a[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .foot{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;font:600 13px var(--sans)}
 .foot .links a{margin-right:4px}
+.staff{font:600 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--sub);text-decoration:none;border-bottom:1px dotted var(--sub)}
+.staff:hover{color:var(--red);border-color:var(--red)}
 
 /* extra toast */
 .extra{position:fixed;right:24px;bottom:24px;z-index:30;width:320px;max-width:calc(100% - 48px);background:var(--bg);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:14px 16px;animation:slideUp .5s cubic-bezier(.2,.8,.2,1) both}

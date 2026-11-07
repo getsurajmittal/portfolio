@@ -5,48 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>The Editor's Desk</title>
+<script>/* no session → back to the staff entrance */
+try { if (!sessionStorage.getItem('gz-office-session') && !localStorage.getItem('gz-office-session')) { sessionStorage.setItem('gz-next', 'desk'); location.replace('../'); } } catch (e) { location.replace('../'); }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css">
 <link rel="stylesheet" href="desk.css">
 </head>
 <body>
+<div class="office-bar">
+  <div class="wrap office-row">
+    <span class="crumbs"><a href="../#hub" class="crumb-home">The Back Office</a> <span>/ The Editor's Desk</span></span>
+    <span class="office-links"><a href="../../" target="_blank" rel="noopener">View the paper ↗</a><button type="button" id="signOut">Sign out</button></span>
+  </div>
+</div>
 <div class="wrap desk">
-  <header class="desk-head">
-    <h1 class="masthead small">The Editor's Desk</h1>
-    <div class="motto">Private. Only someone holding your key can file stories here.</div>
-    <div class="dbl-rule"></div>
-  </header>
-
-  <!-- unlock -->
-  <section id="unlock" class="card" aria-labelledby="unlockH">
-    <h2 id="unlockH" class="side-h">Unlock the desk</h2>
-    <p class="help">Enter your GitHub repository and a fine-grained access token with <b>Contents: Read and write</b> for that repository only. The README explains how to create one in two minutes.</p>
-    <form id="unlockForm" class="grid2">
-      <label>GitHub username or organisation<input id="cOwner" required autocomplete="username" placeholder="your-handle"></label>
-      <label>Repository name<input id="cRepo" required placeholder="gazette"></label>
-      <label>Branch<input id="cBranch" value="main" required></label>
-      <label>Access token<input id="cToken" type="password" required autocomplete="current-password" placeholder="github_pat_…"></label>
-      <label class="check"><input type="checkbox" id="cRemember"> Remember on this device</label>
-      <div class="actions">
-        <button type="submit" class="btn primary">Unlock</button>
-        <button type="button" class="btn" id="offlineBtn">Work offline instead</button>
-      </div>
-    </form>
-    <p class="msg" id="unlockMsg" role="alert"></p>
-  </section>
-
-  <!-- editor -->
-  <section id="editor" hidden>
+  <section id="editor">
     <div class="toolbar" id="toolbar">
-      <span class="status" id="status" role="status">Loaded.</span>
+      <span class="status" id="status" role="status">Opening the desk…</span>
       <span class="tools">
         <button type="button" class="btn" id="previewBtn">Preview</button>
         <button type="button" class="btn" id="pdfBtn">Résumé (PDF)</button>
         <button type="button" class="btn" id="docxBtn">Résumé (.docx)</button>
         <button type="button" class="btn primary" id="publishBtn">Publish edition</button>
-        <button type="button" class="btn ghost" id="lockBtn">Lock</button>
       </span>
     </div>
 
@@ -85,7 +68,7 @@
     <div class="panel" data-panel="file" hidden>
       <div class="card">
         <h3 class="side-h">Your content file</h3>
-        <p class="help">Everything on the site lives in <code>content.json</code>. Keep a backup now and then.</p>
+        <p class="help">Everything on the paper lives in <code>content.json</code> in your website repository. Keep a backup now and then.</p>
         <div class="actions">
           <button type="button" class="btn" id="downloadJson">Download content.json</button>
           <label class="btn">Import content.json<input type="file" id="importJson" accept="application/json,.json" hidden></label>
@@ -95,7 +78,8 @@
     </div>
   </section>
 </div>
-<script src="../resume.js"></script>
+<script src="../session.js"></script>
+<script src="../../resume.js"></script>
 <script src="desk.js"></script>
 </body>
 </html>

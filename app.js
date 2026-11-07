@@ -101,7 +101,7 @@
     if (c.linkedin) links.push('<a href="' + esc(safeUrl(c.linkedin)) + '" rel="noopener">LinkedIn</a>');
     if (c.github) links.push('<a href="' + esc(safeUrl(c.github)) + '" rel="noopener">GitHub</a>');
     if (c.website) links.push('<a href="' + esc(safeUrl(c.website)) + '" rel="noopener">Website</a>');
-    $('contact').innerHTML = '<span class="links">Correspondence: ' + links.join(' · ') + '</span><span>© ' + new Date().getFullYear() + ' ' + esc(s.name) + ' · Printed in ' + esc(s.city) + '</span>';
+    $('contact').innerHTML = '<span class="links">Correspondence: ' + links.join(' · ') + '</span><span>© ' + new Date().getFullYear() + ' ' + esc(s.name) + ' · Printed in ' + esc(s.city) + ' · <a class="staff" href="office/">Staff entrance</a></span>';
   }
 
   function tickClock() {

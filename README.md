@@ -1,73 +1,90 @@
 # The Gazette — your portfolio as a newspaper
 
-A personal portfolio that prints a new "edition" every time you add a certification, project, role or write-up. It's a plain static site: no build step, no server, free to host.
+A personal portfolio that prints a new "edition" every time you add a certification, project, role or write-up, plus a private **Back Office** with your own tools (starting with a Notebook for dated thoughts). It's a plain static site: no build step, no server, free to host.
 
 ```
-index.html      the newspaper (front page, features, opinion, the record)
-styles.css      the look
-app.js          builds the paper from content.json
-content.json    ALL your content lives here
-resume.js       turns content.json into an ATS-friendly résumé
-desk/           your private editor
-images/         photos you upload from the editor
+index.html, styles.css, app.js   the public newspaper
+content.json                     everything the paper shows
+resume.js                        builds the ATS résumé from content.json
+images/                          photos you upload from the desk
+office/                          the private Back Office (login, hub, Notebook)
+office/desk/                     the Editor's Desk (edits the paper, prints the résumé)
+robots.txt                       keeps the Back Office out of search engines
 ```
+
+Your notebook pages are **not** in this folder. They live in a second, **private** GitHub repository, so nobody else can ever read them.
 
 ---
 
-## 1. Put it online (GitHub Pages, about 10 minutes)
+## 1. Put the paper online (GitHub Pages, about 10 minutes)
 
-1. Sign in to github.com (create a free account if needed).
-2. Click **New repository**. Name it `gazette` (or `your-username.github.io` if you want the site at the root address). Make it **Public**. Create it.
-3. On the new repo page click **uploading an existing file**. Drag in **everything inside** this folder (not the folder itself), including the `desk` and `images` folders and the `.nojekyll` file. Click **Commit changes**.
-4. Go to **Settings → Pages**. Under *Build and deployment* choose **Deploy from a branch**, branch **main**, folder **/ (root)**. Save.
-5. After a minute your site is live at
-   `https://your-username.github.io/gazette/` (or `https://your-username.github.io/` for the special repo name).
+1. Sign in to github.com.
+2. **New repository** → name it `gazette` → **Public** → Create.
+3. Click **uploading an existing file**. Drag in **everything inside** this folder (not the folder itself), including the `office` and `images` folders and the `.nojekyll` file. **Commit changes**.
+4. **Settings → Pages** → *Deploy from a branch* → branch **main**, folder **/ (root)** → Save.
+5. After a minute it's live at `https://your-username.github.io/gazette/`. For your own domain (surajmittal.in), see *Custom domain* below.
 
-**Prefer Vercel?** Push the same files to GitHub, then on vercel.com choose *Add New → Project*, import the repo, set *Framework preset* to **Other**, leave build settings empty, and deploy. The editor works exactly the same because it saves to GitHub and Vercel redeploys on every save.
+## 2. Create the private notebook repository (1 minute)
 
-## 2. Create your key to the desk (2 minutes)
+1. **New repository** → name it `notebook` → **Private**.
+2. Tick **Add a README file**. The Back Office needs the repository to have at least one file.
+3. Create. That's it, leave it empty otherwise.
 
-The editor saves straight into your repository, so it needs a GitHub access token. The token is the password.
+## 3. Create your access token (2 minutes)
 
-1. GitHub → your avatar → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
-2. Name it `Gazette desk`. Set an expiry (1 year is fine; you'll just make a new one when it expires).
-3. **Repository access:** *Only select repositories* → pick your `gazette` repo.
-4. **Permissions → Repository permissions → Contents:** **Read and write**. Nothing else.
-5. Generate, then copy the token (starts with `github_pat_`). Keep it somewhere safe, like a password manager.
+1. GitHub → avatar → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+2. Name `Gazette back office`, expiry 1 year.
+3. **Repository access:** *Only select repositories* → pick **both** `gazette` and `notebook`.
+4. **Repository permissions → Contents: Read and write.** Nothing else.
+5. Generate and copy it (starts with `github_pat_`). Save it in your password manager.
 
-## 3. Use the desk
+## 4. Issue your press pass (once per device)
 
-Open `https://your-site-address/desk/` and enter your GitHub username, the repo name, branch `main` and the token. Tick *Remember on this device* only on your own computer.
+1. Open your site and click **Staff entrance** in the footer (or go to `/office/` directly).
+2. The first time on a device you'll see **Issue your press pass**. Enter your GitHub username, `main`, the two repository names, the token, and choose a **press pass**. A memorable phrase of 8+ characters is best.
+3. The Back Office checks that the notebook repository really is private, then locks your token inside this browser, encrypted with the press pass.
 
-- **Profile:** your name, city, role, and the masthead name ("The ___ Gazette").
-- **Stories:** delete the placeholder stories, then **File a new** certification, project, role, column, etc. Each one becomes a front-page edition, ticker headline, archive entry and résumé line automatically.
-- **Preview:** shows the paper with your unsaved changes.
-- **Publish edition:** saves to GitHub. The live site updates in about a minute.
-- **Résumé (PDF)** opens a print view. Choose *Save as PDF*. **Résumé (.docx)** downloads a Word file. Both are single-column, plain-text and ATS-friendly.
+From then on you only type the press pass. Tick **Keep me signed in on this device** only on your own computer or phone.
 
-The résumé buttons exist only on the desk. Visitors to the paper never see them.
+**Forgot the press pass?** Click *Lost your pass?* and set up again with your token. Nothing in your notebook or paper is lost.
 
-### Writing tips that make the paper (and résumé) good
-- **Sub-headline:** one line, concrete. "Cut checkout time by 40% for 2M users" beats "Worked on checkout".
-- **Résumé bullets** (roles and projects): start with a verb, end with a result.
-- **Case study** fields on a project fill page A2. Feature your best one or two.
-- Untick **Include on my résumé** for anything you want on the site but not on the résumé.
+## 5. Using the Back Office
+
+**The hub** shows a *Quick note* box (adds a time-stamped line to today's page), your tools, and the latest notebook pages.
+
+**The Notebook**
+- One page per day. Each visit starts a new time-stamped entry, so the day reads like a log.
+- It saves automatically about a second after you stop typing. The top bar shows *✓ Saved*.
+- Optional title and tags per page. Browse by month or the calendar, filter by tag, and search every page.
+- *Download page* gives you a Markdown copy. *Delete page* removes that day.
+- Stored as one file per month (`pages/2026-11.json`) in your private repository, so you always have a plain copy of everything.
+
+**The Editor's Desk** (formerly `/desk`) edits the paper:
+- **Stories:** file certifications, projects, roles, columns, honours.
+- **Preview** your unsaved changes, then **Publish edition**. The paper updates in about a minute.
+- **Résumé (PDF)** prints to *Save as PDF*. **Résumé (.docx)** downloads a Word file. Both are ATS-friendly.
+
+**Sign out** in the top bar ends the session on that device.
+
+### Adding more utilities later
+Each new tool gets its own folder inside `office/` (e.g. `office/reading/`), loads `../session.js` for the login, and stores its data in the private `notebook` repository (or another private repo). Add a card for it on the hub in `office/index.html`.
 
 ## Privacy, and your current employer
 
-- The paper reads as a personal learning journal. Nothing on it says you're looking for a job.
-- `content.json` is public (that's how the site reads it). Don't put anything there you wouldn't publish, such as a phone number or home address. Add those to the downloaded résumé yourself.
-- The `/desk` page is public, but it does nothing without your token, and it's hidden from search engines.
-- If you ever think your token leaked, delete it on GitHub (Settings → Developer settings) and make a new one.
+- The paper reads as a personal learning journal. Nothing on it says you're job hunting.
+- The footer's *Staff entrance* link is visible to anyone, but it leads only to a login. Without your press pass and token there's nothing to see, and it's hidden from search engines.
+- `content.json` (the paper) is public. Don't put a phone number or address there; add them to the downloaded résumé yourself.
+- Notebook pages live only in your private repository and travel directly between your browser and GitHub.
+- If you think your token leaked, delete it on GitHub (Settings → Developer settings) and make a new one, then use *Lost your pass?* on each device.
 
-## Custom domain (optional)
+## Custom domain (surajmittal.in)
 
-Buy a domain, then in **Settings → Pages → Custom domain** enter it and follow GitHub's DNS instructions (usually a CNAME record pointing to `your-username.github.io`).
+In the `gazette` repo: **Settings → Pages → Custom domain** → enter `surajmittal.in` → Save. At your registrar, set four **A** records for `@` (185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153) and edit the existing **CNAME** `www` to point to `your-username.github.io`. Then tick **Enforce HTTPS**. The Back Office will be at `surajmittal.in/office/`.
 
-## Working offline / without the editor
+## Working locally
 
-You can edit `content.json` by hand in any text editor and upload it to the repo. The desk's **Work offline** mode lets you edit in the browser and download the file. To preview locally, run `python3 -m http.server` in this folder and open http://localhost:8000. Opening `index.html` directly from disk won't work, because browsers block it from reading `content.json`.
+Run `python3 -m http.server` in this folder and open http://localhost:8000. Opening `index.html` straight from disk won't work, because browsers block it from reading `content.json`.
 
 ## How editions work
 
-Every story, sorted by date, is an edition. The newest is the front page and **◀ Back issue** walks backwards through them. "The Morgue" (page B1) lists every edition by year. Returning visitors get an *Extra! Extra!* card listing anything filed since their last visit. Certifications from the last 45 days get a **NEW** stamp.
+Every story, sorted by date, is an edition. The newest is the front page and **◀ Back issue** walks backwards. "The Morgue" (page B1) lists every edition by year. Returning visitors get an *Extra! Extra!* card for anything filed since their last visit. Certifications from the last 45 days get a **NEW** stamp.

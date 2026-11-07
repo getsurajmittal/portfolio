@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Back Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:ital@0;1&family=Libre+Franklin:wght@500;600;700;800&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="office.css">
+</head>
+<body>
+
+<!-- ============ STAFF ENTRANCE (setup + login) ============ -->
+<div class="entrance" id="entrance" hidden>
+  <div class="brand" data-brand>The Gazette</div>
+  <div class="brand-rule"></div>
+
+  <section class="pass-card" id="loginCard" hidden aria-labelledby="loginH">
+    <div class="pass-top"><span class="eyebrow red">Staff entrance</span><span class="eyebrow">Authorised personnel only</span></div>
+    <h1 id="loginH">Show your press pass</h1>
+    <p class="lede">The back office holds your private notebook and tools. Nothing here appears in the paper.</p>
+    <form id="loginForm" class="stack">
+      <label>Press pass<input type="password" id="lPass" required autocomplete="current-password"></label>
+      <label class="check"><input type="checkbox" id="lKeep"> Keep me signed in on this device</label>
+      <button type="submit" class="btn dark big">Enter the back office →</button>
+    </form>
+    <p class="msg" id="loginMsg" role="alert"></p>
+    <div class="pass-foot">
+      <a href="../">← Back to the paper</a>
+      <button type="button" class="linkbtn" id="lostBtn">Lost your pass?</button>
+    </div>
+  </section>
+
+  <section class="pass-card wide" id="setupCard" hidden aria-labelledby="setupH">
+    <div class="pass-top"><span class="eyebrow red">First time on this device</span><span class="eyebrow">Set up</span></div>
+    <h1 id="setupH">Issue your press pass</h1>
+    <p class="lede">Connect your two GitHub repositories once. Your access token is then locked inside this browser with a press pass you choose — you'll only need the pass from now on.</p>
+    <form id="setupForm" class="grid2">
+      <label>GitHub username<input id="sOwner" required autocomplete="username" placeholder="getsurajmittal"></label>
+      <label>Branch<input id="sBranch" value="main" required></label>
+      <label>Website repository <span class="hint">public — the paper</span><input id="sSite" required placeholder="gazette"></label>
+      <label>Notebook repository <span class="hint">must be private</span><input id="sNote" required placeholder="notebook"></label>
+      <label class="full">Access token <span class="hint">fine-grained, Contents: read &amp; write on both repositories</span><input id="sToken" type="password" required placeholder="github_pat_…"></label>
+      <label>Choose a press pass <span class="hint">at least 8 characters</span><input id="sPass" type="password" required minlength="8" autocomplete="new-password"></label>
+      <label>Repeat the press pass<input id="sPass2" type="password" required minlength="8" autocomplete="new-password"></label>
+      <div class="full actions"><button type="submit" class="btn dark big">Issue pass &amp; enter →</button><a href="../" class="btn">Cancel</a></div>
+    </form>
+    <p class="msg" id="setupMsg" role="alert"></p>
+  </section>
+  <p class="fine">Hidden from search engines. Your token never leaves this browser except to talk to GitHub.</p>
+</div>
+
+<!-- ============ INSIDE ============ -->
+<div id="inside" hidden>
+  <header class="topbar">
+    <div class="wrap topbar-row">
+      <div class="crumbs"><a href="#hub" class="crumb-home">The Back Office</a><span id="crumb"></span></div>
+      <nav class="top-nav">
+        <span class="save" id="saveState" role="status"></span>
+        <a href="../" target="_blank" rel="noopener">View the paper ↗</a>
+        <button type="button" class="linkbtn light" id="signOut">Sign out</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- hub -->
+  <main class="wrap view" id="vHub" hidden>
+    <div class="eyebrow" id="hubDate"></div>
+    <h1 class="hello" id="hello">Good day.</h1>
+    <form class="quick" id="quickForm">
+      <label>Quick note for today's page<input type="text" id="quickText" placeholder="A thought, an idea, something you noticed…" autocomplete="off"></label>
+      <button type="submit" class="btn dark">Jot it down</button>
+    </form>
+    <p class="msg ok" id="quickMsg" role="status"></p>
+
+    <div class="section-h">Your tools</div>
+    <div class="tools">
+      <a class="tool" href="#notebook">
+        <div class="tool-top"><span class="eyebrow red">Private</span>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5z"/><path d="M9 3v18M12 8h4M12 12h4"/></svg></div>
+        <div class="tool-name">The Notebook</div>
+        <div class="tool-desc">Dated pages for random thoughts, ideas and things you want to remember.</div>
+        <div class="tool-meta" id="nbMeta">Opening…</div>
+      </a>
+      <a class="tool" href="desk/">
+        <div class="tool-top"><span class="eyebrow">Publishes to the paper</span>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 8h3v9a2 2 0 0 1-2 2M8 9h5M8 13h5"/></svg></div>
+        <div class="tool-name">The Editor's Desk</div>
+        <div class="tool-desc">File certifications, projects and roles; print your ATS résumé.</div>
+        <div class="tool-meta" id="deskMeta"></div>
+      </a>
+      <div class="tool ghost">
+        <div class="tool-name small">Next utility</div>
+        <div class="tool-desc">Room for whatever you build next: a reading list, a study tracker…</div>
+      </div>
+    </div>
+
+    <div class="section-h">Recently in the notebook</div>
+    <div id="recent"></div>
+  </main>
+
+  <!-- notebook list -->
+  <div class="wrap view nb" id="vNotebook" hidden>
+    <aside class="nb-side">
+      <a class="btn dark big" href="#" id="todayBtn">＋ Today's page</a>
+      <label class="search">Search the notebook<input type="search" id="nbSearch" placeholder="word, idea, tag…"></label>
+      <div class="cal">
+        <div class="cal-head">
+          <button type="button" class="cal-nav" id="prevMonth" aria-label="Previous month">‹</button>
+          <span id="calTitle"></span>
+          <button type="button" class="cal-nav" id="nextMonth" aria-label="Next month">›</button>
+        </div>
+        <div class="cal-grid cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="cal-grid" id="calDays"></div>
+        <div class="fine left">Underlined: a page was written that day.</div>
+      </div>
+      <div>
+        <div class="section-h tight">Tags</div>
+        <div class="tags" id="tagFilter"></div>
+      </div>
+    </aside>
+    <main class="nb-main">
+      <div class="nb-head"><h1 id="nbTitle"></h1><span class="fine" id="nbCount"></span></div>
+      <div class="sheets" id="sheets"></div>
+      <div class="month-nav"><button type="button" class="linkbtn" id="olderMonth"></button><button type="button" class="linkbtn" id="newerMonth"></button></div>
+    </main>
+  </div>
+
+  <!-- a page -->
+  <div class="wrap view page-view" id="vPage" hidden>
+    <nav class="day-nav" aria-label="Days">
+      <a id="prevDay" href="#">‹</a>
+      <span id="dayTitle"></span>
+      <a id="nextDay" href="#">›</a>
+    </nav>
+    <article class="sheet-big">
+      <div class="stamp" id="dayStamp"></div>
+      <label><span class="sr">Title</span><input type="text" id="pTitle" class="p-title" placeholder="Title (optional)" autocomplete="off"></label>
+      <div id="entries"></div>
+      <div class="p-tags">
+        <span class="eyebrow">Tags</span>
+        <span id="pTags"></span>
+        <label><span class="sr">Add tag</span><input type="text" id="pTagInput" placeholder="+ add tag" autocomplete="off"></label>
+      </div>
+    </article>
+    <div class="page-foot">
+      <span id="wordCount"></span>
+      <span class="actions">
+        <button type="button" class="btn" id="dlPage">Download page</button>
+        <button type="button" class="btn danger" id="delPage">Delete page</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="wrap view" id="vLoading" hidden><p class="lede">Fetching from the archive…</p></div>
+</div>
+
+<script src="session.js"></script>
+<script src="office.js"></script>
+</body>
+</html>
