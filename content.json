@@ -23,128 +23,88 @@
   },
   "entries": [
     {
-      "id": "cert-latest",
-      "type": "certification",
-      "title": "[Latest Certification]",
-      "org": "[Issuer]",
-      "date": "2026-10-20",
-      "deck": "Deepens expertise in [field] after [n] weeks of study.",
-      "body": "[What the certification covered, in plain words, and why you chose it.]\n\n[How you prepared — hours, labs, what you built while studying.]\n\n[How it connects to your current work.]",
-      "link": "https://example.com/verify",
-      "linkLabel": "Verify credential",
-      "credentialId": "",
-      "image": "",
-      "onResume": true
-    },
-    {
-      "id": "project-a",
-      "type": "project",
-      "title": "[Project A]",
-      "org": "",
-      "date": "2026-08-10",
-      "deck": "[The problem it solves and who it helped, in one line.]",
-      "body": "[The problem, and why it was worth solving.]\n\n[What you built and the stack you used.]\n\n[The measurable outcome.]",
-      "link": "https://github.com/your-handle/project-a",
-      "linkLabel": "See the project",
-      "featured": true,
-      "case": {
-        "problem": "[What was broken or missing, and who it hurt.]",
-        "approach": "[What you designed and built, and the key decision you made.]",
-        "result": "[What changed — measured if you can.]",
-        "quote": "[The one line from this project you'd want quoted.]",
-        "stats": [
-          {
-            "value": "[n]%",
-            "label": "[what improved]"
-          },
-          {
-            "value": "[n]",
-            "label": "[users, hours saved, etc.]"
-          }
-        ]
-      },
-      "bullets": [
-        "[Built X using Y, which achieved Z.]"
-      ],
-      "image": "",
-      "onResume": true
-    },
-    {
-      "id": "column-1",
-      "type": "column",
-      "title": "[What studying for my latest certification taught me]",
-      "date": "2026-07-02",
-      "minutes": 5,
-      "excerpt": "[The opening two lines of the column, shown when a reader hovers.]",
-      "body": "[Your full column text, or leave empty and add a link to where it's published.]",
-      "link": "",
-      "onResume": false
-    },
-    {
-      "id": "cert-2",
-      "type": "certification",
-      "title": "[Certification]",
-      "org": "[Issuer]",
-      "date": "2026-03-15",
-      "deck": "",
-      "body": "",
-      "link": "",
-      "linkLabel": "Verify credential",
-      "onResume": true
-    },
-    {
       "id": "honour-1",
       "type": "honour",
-      "title": "[Award or recognition]",
-      "org": "[Company or event]",
-      "date": "2025-12-01",
+      "title": "Spot Award",
+      "org": "Adtran",
+      "date": "2026-06-10",
       "deck": "",
-      "body": "[Why you received it.]",
-      "onResume": true
+      "body": "Awarded in appreciation and recognition of outstanding contributions to the company",
+      "onResume": true,
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": ""
     },
     {
       "id": "role-current",
       "type": "role",
-      "title": "[Current role]",
-      "org": "[Company]",
-      "location": "[City]",
+      "title": "Software Engineer",
+      "org": "Adtran",
+      "location": "Bangalore",
       "date": "2024-06-01",
       "endDate": "",
-      "deck": "Takes on [area] responsibilities.",
-      "body": "[What the team does.]\n\n[What you own.]\n\n[First wins.]",
-      "bullets": [
-        "[Impact bullet — action verb, what, measurable result.]",
-        "[Impact bullet.]"
-      ],
-      "onResume": true
-    },
-    {
-      "id": "role-prev",
-      "type": "role",
-      "title": "[Previous role]",
-      "org": "[Company]",
-      "location": "[City]",
-      "date": "2021-07-01",
-      "endDate": "2024-05-31",
       "deck": "",
-      "body": "[Impact in one or two lines.]",
-      "bullets": [
-        "[Impact bullet.]",
-        "[Impact bullet.]"
-      ],
-      "onResume": true
+      "body": "",
+      "bullets": [],
+      "onResume": true,
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": ""
     },
     {
       "id": "edu-1",
       "type": "education",
-      "title": "[Degree]",
-      "org": "[University]",
-      "location": "[City]",
-      "date": "2017-07-01",
-      "endDate": "2021-05-31",
+      "title": "Bachelor of Engineering",
+      "org": "Dayananda Sagar College of Engineering",
+      "location": "Bangalore",
+      "date": "2020-06-01",
+      "endDate": "2024-06-01",
       "deck": "",
-      "body": "[Focus area, thesis or standout project.]",
-      "onResume": true
+      "body": "",
+      "onResume": true,
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": ""
+    },
+    {
+      "type": "education",
+      "date": "2005-01-01",
+      "onResume": true,
+      "title": "Secondary Education",
+      "org": "La Martiniere College",
+      "endDate": "2017-06-01",
+      "location": "Lucknow",
+      "deck": "",
+      "body": "",
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "secondary-education-mw6avc6m"
+    },
+    {
+      "type": "education",
+      "date": "2017-06-01",
+      "onResume": true,
+      "title": "Senior Secondary Education",
+      "org": "City Montessori School",
+      "endDate": "2019-06-01",
+      "location": "Lucknow",
+      "deck": "",
+      "body": "",
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "senior-secondary-education-mw6awjz7"
     }
   ],
   "skills": [
