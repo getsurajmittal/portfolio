@@ -1,145 +1,177 @@
 {
   "site": {
-    "name": "[Your Name]",
-    "surname": "[Surname]",
-    "city": "[City]",
-    "role": "[Current role]",
-    "field": "[your field]",
+    "name": "Suraj Mittal",
+    "surname": "Mittal's",
+    "city": "Bangalore",
+    "role": "Software Engineer",
+    "field": "Software Engineering",
     "pronoun": "they",
-    "profile": "[Your Name] is a [current role] in [City], working on [your field]. This paper is a running record of every certification, project and role, filed as it happens.",
-    "summary": "[Current role] with [n] years of experience in [domain]. [One line on your strengths, using keywords from the roles you target.]",
-    "onDesk": { "studying": "[topic]", "reading": "[book or paper]" },
+    "profile": "Suraj Mittal is a Software Developer in Bangalore, working on Infrastructure and Security. This paper is a running record of every certification, project and role, filed as it happens.",
+    "summary": "Software Developer with 2+ years of experience in Infrastructure and Security.",
+    "onDesk": {
+      "studying": "AI SDKs",
+      "reading": ""
+    },
     "contact": {
-      "email": "you@example.com",
+      "email": "getsurajmittal@gmail.com",
       "phone": "",
-      "linkedin": "https://www.linkedin.com/in/your-handle",
-      "github": "https://github.com/your-handle",
+      "linkedin": "https://www.linkedin.com/in/suraj-mittal-58a86a20b/",
+      "github": "https://github.com/getsurajmittal",
       "website": ""
     },
     "accent": "#B3001B"
   },
   "entries": [
     {
-      "id": "cert-latest",
-      "type": "certification",
-      "title": "[Latest Certification]",
-      "org": "[Issuer]",
-      "date": "2026-10-20",
-      "deck": "Deepens expertise in [field] after [n] weeks of study.",
-      "body": "[What the certification covered, in plain words, and why you chose it.]\n\n[How you prepared — hours, labs, what you built while studying.]\n\n[How it connects to your current work.]",
-      "link": "https://example.com/verify",
-      "linkLabel": "Verify credential",
-      "credentialId": "",
-      "image": "",
-      "onResume": true
-    },
-    {
-      "id": "project-a",
-      "type": "project",
-      "title": "[Project A]",
-      "org": "",
-      "date": "2026-08-10",
-      "deck": "[The problem it solves and who it helped, in one line.]",
-      "body": "[The problem, and why it was worth solving.]\n\n[What you built and the stack you used.]\n\n[The measurable outcome.]",
-      "link": "https://github.com/your-handle/project-a",
-      "linkLabel": "See the project",
-      "featured": true,
-      "case": {
-        "problem": "[What was broken or missing, and who it hurt.]",
-        "approach": "[What you designed and built, and the key decision you made.]",
-        "result": "[What changed — measured if you can.]",
-        "quote": "[The one line from this project you'd want quoted.]",
-        "stats": [
-          { "value": "[n]%", "label": "[what improved]" },
-          { "value": "[n]", "label": "[users, hours saved, etc.]" }
-        ]
-      },
-      "bullets": ["[Built X using Y, which achieved Z.]"],
-      "image": "",
-      "onResume": true
-    },
-    {
-      "id": "column-1",
-      "type": "column",
-      "title": "[What studying for my latest certification taught me]",
-      "date": "2026-07-02",
-      "minutes": 5,
-      "excerpt": "[The opening two lines of the column, shown when a reader hovers.]",
-      "body": "[Your full column text, or leave empty and add a link to where it's published.]",
-      "link": "",
-      "onResume": false
-    },
-    {
-      "id": "cert-2",
-      "type": "certification",
-      "title": "[Certification]",
-      "org": "[Issuer]",
-      "date": "2026-03-15",
+      "type": "education",
+      "date": "2005-01-01",
+      "onResume": true,
+      "title": "Secondary Education",
+      "org": "La Martiniere College",
+      "endDate": "2017-06-01",
+      "location": "Lucknow",
       "deck": "",
       "body": "",
       "link": "",
-      "linkLabel": "Verify credential",
-      "onResume": true
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "secondary-education-mw6nfb2y"
     },
     {
-      "id": "honour-1",
-      "type": "honour",
-      "title": "[Award or recognition]",
-      "org": "[Company or event]",
-      "date": "2025-12-01",
-      "deck": "",
-      "body": "[Why you received it.]",
-      "onResume": true
-    },
-    {
-      "id": "role-current",
-      "type": "role",
-      "title": "[Current role]",
-      "org": "[Company]",
-      "location": "[City]",
-      "date": "2024-06-01",
-      "endDate": "",
-      "deck": "Takes on [area] responsibilities.",
-      "body": "[What the team does.]\n\n[What you own.]\n\n[First wins.]",
-      "bullets": ["[Impact bullet — action verb, what, measurable result.]", "[Impact bullet.]"],
-      "onResume": true
-    },
-    {
-      "id": "role-prev",
-      "type": "role",
-      "title": "[Previous role]",
-      "org": "[Company]",
-      "location": "[City]",
-      "date": "2021-07-01",
-      "endDate": "2024-05-31",
-      "deck": "",
-      "body": "[Impact in one or two lines.]",
-      "bullets": ["[Impact bullet.]", "[Impact bullet.]"],
-      "onResume": true
-    },
-    {
-      "id": "edu-1",
       "type": "education",
-      "title": "[Degree]",
-      "org": "[University]",
-      "location": "[City]",
-      "date": "2017-07-01",
-      "endDate": "2021-05-31",
+      "date": "2017-06-01",
+      "onResume": true,
+      "title": "Senior Secondary Education",
+      "org": "City Montessori School",
+      "endDate": "2019-06-01",
+      "location": "",
       "deck": "",
-      "body": "[Focus area, thesis or standout project.]",
-      "onResume": true
+      "body": "",
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "senior-secondary-education-mw6ng0mu"
+    },
+    {
+      "type": "education",
+      "date": "2020-06-01",
+      "onResume": true,
+      "title": "Bachelor of Engineering",
+      "org": "Dayananda Sagar College of Engineering",
+      "endDate": "2024-06-01",
+      "location": "",
+      "deck": "",
+      "body": "",
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "bachelor-of-engineering-mw6nh6o9"
+    },
+    {
+      "type": "role",
+      "date": "2024-06-01",
+      "onResume": true,
+      "title": "Software Engineer",
+      "org": "Adtran",
+      "endDate": "",
+      "location": "Bangalore",
+      "deck": "",
+      "body": "",
+      "bullets": [],
+      "link": "",
+      "linkLabel": "",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "software-engineer-mw6niclf"
     }
   ],
   "skills": [
-    { "name": "[Skill 1]", "group": "Languages", "years": 4, "trend": "up", "history": [2, 3, 5, 6, 9] },
-    { "name": "[Skill 2]", "group": "Platforms", "years": 3, "trend": "up", "history": [1, 2, 2, 5, 7] },
-    { "name": "[Skill 3]", "group": "Tools", "years": 5, "trend": "steady", "history": [5, 6, 5, 6, 6] },
-    { "name": "[Skill 4]", "group": "Platforms", "years": 2, "trend": "up", "history": [0, 1, 3, 4, 8] },
-    { "name": "[Skill 5]", "group": "Tools", "years": 5, "trend": "steady", "history": [6, 5, 6, 5, 5] }
+    {
+      "name": "[Skill 1]",
+      "group": "Languages",
+      "years": 4,
+      "trend": "up",
+      "history": [
+        2,
+        3,
+        5,
+        6,
+        9
+      ]
+    },
+    {
+      "name": "[Skill 2]",
+      "group": "Platforms",
+      "years": 3,
+      "trend": "up",
+      "history": [
+        1,
+        2,
+        2,
+        5,
+        7
+      ]
+    },
+    {
+      "name": "[Skill 3]",
+      "group": "Tools",
+      "years": 5,
+      "trend": "steady",
+      "history": [
+        5,
+        6,
+        5,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "[Skill 4]",
+      "group": "Platforms",
+      "years": 2,
+      "trend": "up",
+      "history": [
+        0,
+        1,
+        3,
+        4,
+        8
+      ]
+    },
+    {
+      "name": "[Skill 5]",
+      "group": "Tools",
+      "years": 5,
+      "trend": "steady",
+      "history": [
+        6,
+        5,
+        6,
+        5,
+        5
+      ]
+    }
   ],
   "letters": [
-    { "quote": "[A short recommendation from a manager.]", "name": "[Name]", "title": "[Title]", "company": "[Company]" },
-    { "quote": "[A line from a colleague or client.]", "name": "[Name]", "title": "[Title]", "company": "[Company]" }
+    {
+      "quote": "[A short recommendation from a manager.]",
+      "name": "[Name]",
+      "title": "[Title]",
+      "company": "[Company]"
+    },
+    {
+      "quote": "[A line from a colleague or client.]",
+      "name": "[Name]",
+      "title": "[Title]",
+      "company": "[Company]"
+    }
   ],
   "corrections": [
     "In an earlier edition, the Gazette reported that [project] would take one week. It took three. The Gazette regrets the optimism, and has since learned [lesson]."
