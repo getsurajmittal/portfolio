@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Gazette</title>
+<meta name="description" content="A running record of certifications, projects and work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800;900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>try{if(localStorage.getItem('gz-theme')==='night')document.documentElement.dataset.theme='night'}catch(e){}</script>
+</head>
+<body>
+
+<div class="minibar" id="minibar">
+  <div class="progress" id="progress"></div>
+  <div class="wrap minibar-row">
+    <a class="mini-title" href="#A1" data-brand>The Gazette</a>
+    <nav class="mini-nav" aria-label="Pages" id="miniNav"></nav>
+  </div>
+</div>
+
+<div class="wrap paper" id="paper">
+  <header class="masthead-row" id="mastheadRow">
+    <div class="ear">
+      <div class="ear-h">On the desk</div>
+      <div id="onDesk"></div>
+    </div>
+    <h1 class="masthead" data-brand>The Gazette</h1>
+    <div class="ear ear-r">
+      <div class="ear-h">Late edition</div>
+      Printed <span id="clock"></span><br>Updated with every new record
+    </div>
+  </header>
+  <div class="motto">“All the work that's fit to print”</div>
+
+  <div class="dateline">
+    <span>Vol. <span id="vol"></span> · No. <span id="edNo"></span></span>
+    <span id="dateText"></span>
+    <span class="dateline-ctrls">
+      <button type="button" class="lnk" id="older">◀ Back issue</button><span aria-hidden="true">|</span>
+      <button type="button" class="lnk" id="newer">Newer ▶</button><span aria-hidden="true">|</span>
+      <button type="button" class="lnk" id="nightBtn">Night edition</button>
+    </span>
+    <span>Price: one conversation</span>
+  </div>
+  <div class="dbl-rule"></div>
+
+  <div class="ticker" aria-label="Latest headlines">
+    <div class="ticker-tag">LATEST</div>
+    <div class="ticker-win"><div class="ticker-run" id="tickerRun"></div></div>
+  </div>
+
+  <main id="pages">
+    <!-- A1 · Front page -->
+    <section class="page" data-page="A1" aria-label="Front page">
+      <div class="front">
+        <article class="lead story" id="lead"></article>
+        <aside class="side">
+          <div class="side-block">
+            <div class="label">Profile</div>
+            <h3 class="side-h">Who Writes This Paper</h3>
+            <p class="just" id="profile"></p>
+          </div>
+          <div class="boxed">
+            <div class="label center ruled">Inside Today</div>
+            <div id="inside"></div>
+          </div>
+          <div id="lettersWrap">
+            <div class="label ruled">Letters to the Editor</div>
+            <div class="letter-box"><blockquote id="letter"></blockquote></div>
+            <div class="dots" id="letterDots"></div>
+          </div>
+        </aside>
+      </div>
+      <div class="fold"><span></span><em>below the fold</em><span></span></div>
+      <div class="below reveal">
+        <div class="col"><div class="label ruled">From the Archives</div><div id="archives"></div></div>
+        <div class="col col-rule"><div class="label ruled">Public Notices</div><p class="note">Certifications on record, verified with the issuer.</p><div id="notices"></div></div>
+        <div class="col col-rule"><div class="label ruled">Skills Market</div><table class="market"><tbody id="market"></tbody></table><p class="note">▲ used more this year · — steady</p></div>
+      </div>
+    </section>
+
+    <!-- A2 · Features -->
+    <section class="page" data-page="A2" aria-label="Features" hidden>
+      <div id="feature"></div>
+      <div class="more-features" id="moreFeatures"></div>
+    </section>
+
+    <!-- A3 · Opinion -->
+    <section class="page" data-page="A3" aria-label="Opinion" hidden>
+      <div class="front">
+        <div class="lead">
+          <div class="label red ruled">A3 · Opinion — The Editor's Column</div>
+          <div id="columns"></div>
+        </div>
+        <aside class="side">
+          <div class="boxed thin" id="correctionsWrap">
+            <div class="label ruled">Corrections &amp; Clarifications</div>
+            <div id="corrections"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- B1 · The Record -->
+    <section class="page" data-page="B1" aria-label="The Record" hidden>
+      <div class="label red">B1 · The Record</div>
+      <div class="scoreboard" id="scoreboard"></div>
+      <div class="front">
+        <div class="lead"><div class="label ruled">Honours List</div><div id="honours"></div></div>
+        <aside class="side wide">
+          <div class="label ruled">The Morgue — every edition ever printed</div>
+          <div class="years" id="years"></div>
+          <div id="morgue" class="fadeable"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <nav class="pager" aria-label="Turn page">
+    <button type="button" class="lnk it" id="prevPage">◂ Previous page</button>
+    <div id="pagerNums"></div>
+    <button type="button" class="lnk it" id="nextPage">Next page ▸</button>
+  </nav>
+
+  <footer class="foot" id="contact"></footer>
+</div>
+
+<div class="extra" id="extra" role="status" hidden>
+  <div class="extra-top"><span class="extra-h">Extra! Extra!</span><button type="button" class="x" id="extraClose" aria-label="Dismiss">×</button></div>
+  <p id="extraText"></p>
+  <a class="lnk strong" id="extraGo" href="#A1">Catch up ▸</a>
+</div>
+
+<noscript><p class="wrap">This paper needs JavaScript to print. Please enable it.</p></noscript>
+<script src="app.js"></script>
+</body>
+</html>
