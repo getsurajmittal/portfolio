@@ -157,6 +157,7 @@
       m.setAttribute('transform', 'rotate(' + (min * 6).toFixed(2) + ' 50 50)');
       s.setAttribute('transform', 'rotate(' + (sec * 6).toFixed(2) + ' 50 50)');
       if (z.minute !== lastMin) {
+        if (lastMin !== -1 && z.hour === 0 && z.minute === 0) renderDateline(); /* roll over at midnight */
         lastMin = z.minute;
         lbl.textContent = now.toLocaleTimeString('en-GB', { timeZone: TZ, hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase() + ' IST';
       }
@@ -164,6 +165,14 @@
     draw();
     if (reduced) setInterval(draw, 1000);
     else (function loop() { draw(); requestAnimationFrame(loop); })();
+  }
+
+  /* The dateline is today's date in Bangalore for the current edition; a back issue says so, with its own date. */
+  function renderDateline() {
+    var e = editions[edIdx], long = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    $('dateText').textContent = edIdx > 0 && e
+      ? 'Back issue · ' + fmt(e.date, long)
+      : D.site.city + ', ' + new Date().toLocaleDateString('en-GB', Object.assign({ timeZone: TZ }, long));
   }
 
   /* ---------- "Last updated": the newest publish we know of ----------
@@ -194,7 +203,7 @@
     if (!e) { $('lead').innerHTML = '<p>No stories filed yet.</p>'; return; }
     var no = editions.length - edIdx;
     $('edNo').textContent = String(no);
-    $('dateText').textContent = D.site.city + ', ' + fmt(e.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    renderDateline();
     $('older').disabled = edIdx >= editions.length - 1;
     $('newer').disabled = edIdx === 0;
 
