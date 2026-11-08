@@ -45,6 +45,19 @@
   function b64dec(b) { return decodeURIComponent(escape(atob(String(b).replace(/\s/g, '')))); }
 
   function GH(cfg) { this.cfg = cfg; }
+  function repoOf(url) { var m = /^\/repos\/[^/]+\/([^/?]+)/.exec(url); return m ? decodeURIComponent(m[1]) : 'that repository'; }
+  /* Each repository is read and written on its own default branch, looked up once by ready(); the branch typed at
+     setup is only a fallback. Without this, a notebook repo on "master" looked empty and every save failed. */
+  GH.prototype.branchFor = function (repo) { return (this.branches && this.branches[repo]) || this.cfg.branch || 'main'; };
+  GH.prototype.ready = function (repos) {
+    var self = this; self.branches = self.branches || {};
+    return Promise.all(repos.map(function (repo) {
+      return self.repoInfo(repo).then(function (info) {
+        if (info && info.default_branch) self.branches[repo] = info.default_branch;
+        return info;
+      });
+    }));
+  };
   GH.prototype.req = function (url, opts) {
     opts = opts || {};
     return fetch('https://api.github.com' + url, {
@@ -58,7 +71,7 @@
           var e = new Error(
             r.status === 401 ? 'GitHub rejected the token — it may have expired. Use “Lost your pass?” to set up again with a new token.' :
             r.status === 403 ? 'The token is not allowed to do that. It needs Contents: Read and write on this repository.' :
-            r.status === 404 ? 'Not found on GitHub (check the repository names, and that the token can see them).' :
+            r.status === 404 ? 'GitHub can’t find “' + repoOf(url) + '”' + (j.message && j.message !== 'Not Found' ? ' (' + j.message + ')' : '') + '. Check the repository name and that your access token includes it.' :
             r.status === 409 || r.status === 422 ? 'The file changed on GitHub in the meantime.' :
             (j.message || 'GitHub said ' + r.status));
           e.status = r.status; throw e;
@@ -72,15 +85,15 @@
   };
   GH.prototype.repoInfo = function (repo) { return this.req('/repos/' + encodeURIComponent(this.cfg.owner) + '/' + encodeURIComponent(repo)); };
   GH.prototype.getJSON = function (repo, p) {
-    return this.req(this.path(repo, p) + '?ref=' + encodeURIComponent(this.cfg.branch) + '&t=' + Date.now()).then(function (j) {
+    return this.req(this.path(repo, p) + '?ref=' + encodeURIComponent(this.branchFor(repo)) + '&t=' + Date.now()).then(function (j) {
       return { sha: j.sha, data: JSON.parse(b64dec(j.content)) };
     });
   };
   GH.prototype.list = function (repo, p) {
-    return this.req(this.path(repo, p) + '?ref=' + encodeURIComponent(this.cfg.branch) + '&t=' + Date.now());
+    return this.req(this.path(repo, p) + '?ref=' + encodeURIComponent(this.branchFor(repo)) + '&t=' + Date.now());
   };
   GH.prototype.put = function (repo, p, contentB64, sha, message) {
-    var body = { message: message, content: contentB64, branch: this.cfg.branch };
+    var body = { message: message, content: contentB64, branch: this.branchFor(repo) };
     if (sha) body.sha = sha;
     return this.req(this.path(repo, p), { method: 'PUT', body: body });
   };
@@ -88,7 +101,7 @@
     return this.put(repo, p, b64enc(JSON.stringify(data, null, 2) + '\n'), sha, message);
   };
   GH.prototype.del = function (repo, p, sha, message) {
-    return this.req(this.path(repo, p), { method: 'DELETE', body: { message: message, sha: sha, branch: this.cfg.branch } });
+    return this.req(this.path(repo, p), { method: 'DELETE', body: { message: message, sha: sha, branch: this.branchFor(repo) } });
   };
 
   window.Office = { Vault: Vault, Session: Session, GH: GH, b64enc: b64enc, b64dec: b64dec };

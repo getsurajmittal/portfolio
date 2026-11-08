@@ -170,8 +170,18 @@
   function enter(c) {
     cfg = c; gh = new O.GH(c);
     $('entrance').hidden = true; $('inside').hidden = false;
-    if (!location.hash || location.hash === '#login' || location.hash === '#setup') location.hash = '#hub';
-    else route();
+    $('repoBanner').hidden = true;
+    /* learn each repository's branch first; if one can't be reached, say which, instead of showing an empty notebook */
+    var check = function (repo, label) {
+      return gh.ready([repo]).catch(function (e) { throw new Error(label + ' “' + repo + '”: ' + e.message); });
+    };
+    Promise.all([check(cfg.siteRepo, 'Website repository'), check(cfg.notebookRepo, 'Notebook repository')]).catch(function (e) {
+      $('repoBanner').textContent = e.message + ' Until this is fixed, nothing here can be saved. If the name or token changed, use “Lost your pass?” on the sign-in page to set up again.';
+      $('repoBanner').hidden = false;
+    }).then(function () {
+      if (!location.hash || location.hash === '#login' || location.hash === '#setup') location.hash = '#hub';
+      else route();
+    });
   }
   $('signOut').onclick = function () {
     if (pending && !confirm('A save is still in progress. Sign out anyway?')) return;

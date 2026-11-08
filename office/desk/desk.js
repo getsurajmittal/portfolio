@@ -288,6 +288,6 @@
   });
 
   /* ---------- boot ---------- */
-  load().then(function (d) { openDesk(d); status('Latest content loaded from GitHub.'); })
+  gh.ready([REPO]).then(load).then(function (d) { openDesk(d); status('Latest content loaded from GitHub.'); })
     .catch(function (e) { status('Could not open the paper’s content: ' + e.message, true); });
 })();

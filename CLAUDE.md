@@ -84,7 +84,7 @@ It includes entries where `onResume !== false`, grouped as Experience (role), Pr
 - **No server.** The browser talks directly to the GitHub Contents API with a fine-grained PAT.
 - `Vault`: the config `{owner, branch, siteRepo, notebookRepo, token}` is encrypted with AES-GCM, using a key derived via PBKDF2-SHA256 (310k iterations) from the "press pass", and stored in localStorage.
 - `Session`: the unlocked config, kept in sessionStorage, or also in localStorage if "keep me signed in" is ticked. The Desk redirects to `../` if there's no session.
-- `GH`: `getJSON`, `list`, `put`, `putJSON`, `del` and `repoInfo`. Writes need the file `sha`, and 409/422 means a conflict.
+- `GH`: `getJSON`, `list`, `put`, `putJSON`, `del` and `repoInfo`. Writes need the file `sha`, and 409/422 means a conflict. Each repo is read and written on **its own default branch** (`gh.ready([repos])` looks them up; `branchFor`), and the setup branch is only a fallback. The hub calls `ready` for both repos at sign-in and shows `#repoBanner` naming the repo if one can't be reached, because a 404 on a file is otherwise treated as "no data yet".
 - **Notebook** data lives in a separate **private** repo (`notebookRepo`). The format is under "Notebook data" above. It autosaves about 1.5s after you stop typing, with saves chained per month, and on a sha conflict it re-fetches and merges the days you touched.
 - **Desk** publishing commits `content.json` to `siteRepo` with the message `Edition: <last 3 changes> (date)`. Image uploads go to `images/`.
 - Adding a new utility: create `office/<tool>/`, load `../session.js`, store its data in a private repo, and add a card on the hub in `office/index.html`. The hub already has a "Next utility" ghost card for this.
