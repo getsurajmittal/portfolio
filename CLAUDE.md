@@ -87,6 +87,7 @@ It includes entries where `onResume !== false`, grouped as Experience (role), Pr
 
 ## Gotchas
 
+- **Bump the asset version on every JS/CSS change.** `index.html`, `office/index.html` and `office/desk/index.html` load local scripts and styles as `file.js?v=YYYYMMDDx`. GitHub Pages lets browsers cache files for 10 minutes, so without a new `?v=` a visitor can get new HTML with old JS (for example, buttons that do nothing). Use one value across all three pages and change it in the same commit.
 - **The live site edits itself.** Commits starting with `Edition:` and image uploads are made by the Desk, straight to GitHub `main`. Before editing `content.json` (or anything else) locally, `git pull` so you don't clobber or conflict with Desk publishes.
 - `content.json` is public, so never put a phone number, address or other private data in it. Notebook content must never end up in this repo.
 - Keep `office/` out of search engines: keep `robots.txt` and the `noindex` meta tags.
