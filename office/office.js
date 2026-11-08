@@ -201,6 +201,7 @@
     $('hubDate').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     if (site && site.entries) $('deskMeta').textContent = 'Edition No. ' + site.entries.length + ' in print';
     $('nbMeta').textContent = 'Opening…';
+    openVis();
     loadAll().then(function () {
       var all = allPages(), pub = all.filter(function (x) { return live(x.pg); }).length;
       $('nbMeta').textContent = all.length ? all.length + ' page' + (all.length === 1 ? '' : 's') + (pub ? ' · ' + pub + ' published' : '') + ' · last written ' + (all[0].date === today() ? 'today' : fmt(all[0].date, { day: 'numeric', month: 'short' })) : 'No pages yet — start today';
@@ -209,6 +210,55 @@
       }).join('') || '<p class="empty">Nothing yet. Jot a note above, or open today’s page.</p>';
     }).catch(function (e) { $('nbMeta').textContent = e.message; });
   }
+  /* ---------- show / hide sections of the paper (settings.json in the website repo) ---------- */
+  var VIS = [
+    { key: 'tech', name: 'From The Column', cls: 'tech' },
+    { key: 'life', name: 'Life & Times', cls: 'life' },
+    { key: 'letters', name: 'Letters to the Editor', cls: '' },
+    { key: 'corrections', name: 'Corrections', cls: '' }
+  ];
+  var settings = null; /* { sha, data: { hidden: [] } } */
+  function loadSettings() {
+    return gh.getJSON(cfg.siteRepo, 'settings.json').then(function (r) {
+      r.data = r.data || {}; r.data.hidden = Array.isArray(r.data.hidden) ? r.data.hidden : []; return r;
+    }, function (e) { if (e.status === 404) return { sha: null, data: { hidden: [] } }; throw e; });
+  }
+  function renderVis() {
+    var h = settings.data.hidden;
+    $('visList').innerHTML = VIS.map(function (v) {
+      var on = h.indexOf(v.key) < 0;
+      return '<label class="vis-row' + (on ? '' : ' off') + '"><span><span class="vis-name ' + v.cls + '">' + esc(v.name) + '</span>' +
+        '<span class="vis-state">' + (on ? 'Shown on the paper' : 'Hidden') + '</span></span>' +
+        '<span class="switch"><input type="checkbox" data-vis="' + v.key + '"' + (on ? ' checked' : '') + ' aria-label="Show ' + esc(v.name) + ' on the paper"><span></span></span></label>';
+    }).join('');
+  }
+  function openVis() {
+    $('visList').innerHTML = '<p class="vis-note">Checking the paper…</p>';
+    loadSettings().then(function (r) { settings = r; renderVis(); })
+      .catch(function (e) { $('visList').innerHTML = '<p class="msg">' + esc(e.message) + '</p>'; });
+  }
+  $('visList').addEventListener('change', function (ev) {
+    var box = ev.target.closest('[data-vis]'); if (!box || !settings) return;
+    var key = box.dataset.vis, show = box.checked, name = VIS.find(function (v) { return v.key === key; }).name;
+    document.querySelectorAll('[data-vis]').forEach(function (b) { b.disabled = true; });
+    $('visMsg').className = 'msg ok'; $('visMsg').textContent = 'Saving…';
+    var apply = function (r) {
+      var h = r.data.hidden.filter(function (k) { return k !== key; });
+      if (!show) h.push(key);
+      var next = Object.assign({}, r.data, { hidden: h, updatedAt: new Date().toISOString() });
+      return gh.putJSON(cfg.siteRepo, 'settings.json', next, r.sha, (show ? 'Show ' : 'Hide ') + key + ' on the paper')
+        .then(function (j) { settings = { sha: j.content.sha, data: next }; });
+    };
+    apply(settings).catch(function (e) {
+      if (e.status === 409 || e.status === 422) return loadSettings().then(apply); /* changed elsewhere: reload and retry once */
+      throw e;
+    }).then(function () {
+      $('visMsg').textContent = name + (show ? ' is back on the paper' : ' is hidden from the paper') + ' · live in about a minute';
+    }).catch(function (e) {
+      $('visMsg').className = 'msg'; $('visMsg').textContent = 'Not saved: ' + e.message;
+    }).then(function () { renderVis(); });
+  });
+
   function secChip(p) { return live(p) ? '<span class="sec ' + esc(p.post.section) + '">' + esc(SECTIONS[p.post.section] || '') + '</span>' : ''; }
   $('quickForm').addEventListener('submit', function (ev) {
     ev.preventDefault();

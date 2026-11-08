@@ -59,6 +59,10 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
 
 `pages/YYYY-MM.json` = `{v: 2, days: {"YYYY-MM-DD": {pages: [{id, title, tags[], entries[{t, text}], post?}]}}}`. A day holds several pages. Old v1 days (`{title, tags, entries}`) are read as one page with id `p1` (`normDay`) and saved back as v2. Routes: `#page/<date>` opens the day's latest page, `#page/<date>/<id>` opens a specific page, and `#page/<date>/new` starts a new page. A new page is only added to the day on its first edit.
 
+## Hiding sections (settings.json)
+
+`settings.json` in the website repo = `{hidden: ["tech"|"life"|"letters"|"corrections"], updatedAt}`. It's written by the switches under "On the paper" on the Back Office hub (`office.js`, `VIS`). `app.js` loads it alongside `content.json`. Hidden post sections are filtered out of `POSTS`, so they vanish from the strips, A3 and direct links; hidden letters and corrections hide their boxes. It only hides things on the website: the files stay in the public repo. A missing file means nothing is hidden.
+
 ## How the paper renders (app.js)
 
 - Every entry is an "edition", sorted newest first. The newest is the A1 lead story, and ◀ Back issue steps through older ones.

@@ -244,7 +244,7 @@
 
   function renderLetters() {
     var L = D.letters || [];
-    $('lettersWrap').hidden = !L.length;
+    $('lettersWrap').hidden = !L.length || hidden('letters');
     if (!L.length) return;
     var l = L[letterIdx % L.length];
     $('letter').innerHTML = '“' + esc(l.quote) + '”<footer>— ' + esc([l.name, l.title, l.company].filter(Boolean).join(', ')) + '</footer>';
@@ -329,13 +329,16 @@
      posts/<slug>.json {slug,title,date,updated?,excerpt?,tags?[],minutes?,body}       — body is Markdown (small subset)
      Both are written by the Back Office when a post is published; a missing index just means no posts. */
   var POSTS = [];
+  /* sections switched off in the Back Office: tech, life, letters, corrections */
+  var HIDDEN = [];
+  function hidden(name) { return HIDDEN.indexOf(name) > -1; }
   var SLUG = /^[a-z0-9][a-z0-9-]{0,80}$/;
   function loadPosts() {
     return fetch('posts/index.json?v=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : { posts: [] }; })
       .then(function (j) {
         postsUpdatedAt = j && j.updatedAt || null;
-        POSTS = ((j && j.posts) || []).filter(function (p) { return p && p.title && SLUG.test(String(p.slug)); })
+        POSTS = ((j && j.posts) || []).filter(function (p) { return p && p.title && SLUG.test(String(p.slug)) && !hidden(sectionOf(p)); })
           .sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
       })
       .catch(function () { POSTS = []; });
@@ -455,7 +458,7 @@
   }
   function renderCorrections() {
     var cor = (D.corrections || []).filter(Boolean);
-    $('correctionsWrap').hidden = !cor.length;
+    $('correctionsWrap').hidden = !cor.length || hidden('corrections');
     $('corrections').innerHTML = cor.map(function (t) { return '<p class="correction">' + esc(t) + '</p>'; }).join('');
   }
 
@@ -633,9 +636,13 @@
   function load() {
     var preview = /[?&]preview\b/.test(location.search) && store('gz-preview');
     if (preview) { try { return boot(JSON.parse(preview)); } catch (e) { /* fall through */ } }
-    fetch('content.json?v=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(boot)
+    /* settings.json (written from the Back Office hub) lists sections hidden from the paper; missing = nothing hidden */
+    var settings = fetch('settings.json?v=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+      .then(function (s) { HIDDEN = (s && Array.isArray(s.hidden)) ? s.hidden : []; });
+    var content = fetch('content.json?v=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    Promise.all([content, settings]).then(function (x) { boot(x[0]); })
       .catch(function (err) {
         document.getElementById('pages').innerHTML = '<p style="padding:40px 0">The presses jammed — content.json could not be loaded (' + esc(err.message) + '). If you opened this file directly, run it from a web server instead.</p>';
       });
