@@ -11,6 +11,16 @@
       "minutes": 1
     },
     {
+      "slug": "how-to-fall-in-love-with-your-life-again",
+      "section": "life",
+      "title": "How to fall in love with your life AGAIN?",
+      "date": "2026-11-08",
+      "updated": "2026-11-08",
+      "excerpt": "- stop expecting from everyone - stop taking things personally - don't beg for love or attention - keep emotions under control - disconnect for a while - let…",
+      "tags": [],
+      "minutes": 1
+    },
+    {
       "slug": "notes-on-tool-calls",
       "section": "tech",
       "title": "Notes on tool calls in an AI SDK",
@@ -155,5 +165,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-08T06:34:00.000Z"
+  "updatedAt": "2026-11-08T17:28:39.033Z"
 }
