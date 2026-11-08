@@ -6,7 +6,7 @@
   var O = window.Office, $ = function (id) { return document.getElementById(id); };
   var cfg = null, gh = null, site = null;
   var months = {}, monthList = null, touched = {}, chains = {}, pending = 0, saveTimer = null;
-  var nb = { month: null, tag: 'all', q: '' };
+  var nb = { month: null, tag: 'all', q: '', show: 'all' }; /* show: all | pub | tech | life */
   var page = { date: null, day: null, pg: null, draft: null };
   var SECTIONS = { tech: 'From The Column', life: 'Life & Times' };
 
@@ -251,18 +251,21 @@
     }
     $('calDays').innerHTML = cells;
 
-    var list;
+    /* searching or showing published pages looks across every month; otherwise just this month */
+    var scoped = nb.show !== 'all';
+    var list = nb.q || scoped ? allPages() : allPages().filter(function (x) { return ymOf(x.date) === ym; });
     if (nb.q) {
       var q = nb.q.toLowerCase();
-      list = allPages().filter(function (x) {
+      list = list.filter(function (x) {
         var p = x.pg; return (p.title || '').toLowerCase().indexOf(q) > -1 || (p.tags || []).join(' ').toLowerCase().indexOf(q) > -1 ||
           (p.entries || []).some(function (e) { return (e.text || '').toLowerCase().indexOf(q) > -1; });
       });
-      $('nbTitle').textContent = 'Search: “' + nb.q + '”';
-    } else {
-      list = allPages().filter(function (x) { return ymOf(x.date) === ym; });
-      $('nbTitle').textContent = fmt(ym + '-01', { month: 'long', year: 'numeric' });
     }
+    if (scoped) list = list.filter(function (x) { return live(x.pg) && (nb.show === 'pub' || x.pg.post.section === nb.show); });
+    var showName = { pub: 'Published', tech: 'Published in The Column', life: 'Published in Life & Times' }[nb.show];
+    $('nbTitle').textContent = nb.q ? 'Search: “' + nb.q + '”' + (scoped ? ' · ' + showName.toLowerCase() : '') :
+      scoped ? showName : fmt(ym + '-01', { month: 'long', year: 'numeric' });
+    document.querySelectorAll('#showFilter [data-show]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.show === nb.show)); });
     var tags = {}; list.forEach(function (x) { (x.pg.tags || []).forEach(function (g) { tags[g] = 1; }); });
     if (nb.tag !== 'all' && !tags[nb.tag]) nb.tag = 'all';
     var shown = nb.tag === 'all' ? list : list.filter(function (x) { return (x.pg.tags || []).indexOf(nb.tag) > -1; });
@@ -271,15 +274,22 @@
     }).join('');
     $('nbCount').textContent = shown.length + ' page' + (shown.length === 1 ? '' : 's') + (nb.tag !== 'all' ? ' tagged #' + nb.tag : '');
     $('sheets').innerHTML = shown.map(sheetHTML).join('') ||
-      '<p class="empty">' + (nb.q ? 'Nothing matches.' : 'No pages this month. <a href="#page/' + (ym === ymOf(t) ? t : ym + '-01') + '/new">Write one</a>.') + '</p>';
+      '<p class="empty">' + (nb.q ? 'Nothing matches.' : scoped ? 'Nothing published here yet. Open a page and press Publish… to put it on the paper.' :
+        'No pages this month. <a href="#page/' + (ym === ymOf(t) ? t : ym + '-01') + '/new">Write one</a>.') + '</p>';
 
     var older = shiftMonth(ym, -1), newer = shiftMonth(ym, 1), earliest = (monthList || []).slice(-1)[0] || ymOf(t);
     $('olderMonth').textContent = '‹ ' + fmt(older + '-01', { month: 'long', year: 'numeric' });
     $('olderMonth').disabled = older < earliest && older < shiftMonth(ymOf(t), -1);
     $('newerMonth').textContent = fmt(newer + '-01', { month: 'long', year: 'numeric' }) + ' ›';
     $('newerMonth').disabled = newer > ymOf(t);
-    $('olderMonth').hidden = $('newerMonth').hidden = !!nb.q;
+    $('olderMonth').hidden = $('newerMonth').hidden = !!nb.q || scoped;
   }
+  $('showFilter').addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-show]'); if (!b) return;
+    nb.show = b.dataset.show; nb.tag = 'all';
+    if (nb.show === 'all') renderNotebook();
+    else { $('nbTitle').textContent = 'Gathering published pages…'; loadAll().then(renderNotebook).catch(fail); }
+  });
   $('olderMonth').onclick = function () { location.hash = '#notebook/' + shiftMonth(nb.month, -1); };
   $('newerMonth').onclick = function () { location.hash = '#notebook/' + shiftMonth(nb.month, 1); };
   $('prevMonth').onclick = $('olderMonth').onclick;

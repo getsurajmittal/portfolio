@@ -100,6 +100,10 @@ a.tool:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink);colo
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tags button{min-height:36px;padding:0 12px;cursor:pointer;font:600 13px var(--sans);border:1px solid var(--ink);background:transparent;color:var(--ink)}
 .tags button[aria-pressed="true"]{background:var(--ink);color:var(--light)}
+.tags button.show-tech{border-color:var(--red);color:var(--red)}
+.tags button.show-life{border-color:var(--life);color:var(--life)}
+.tags button.show-tech[aria-pressed="true"]{background:var(--red);color:#fff}
+.tags button.show-life[aria-pressed="true"]{background:var(--life);color:#fff}
 .nb-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:20px}
 .nb-head h1{margin:0;font:700 32px var(--old)}
 .sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
