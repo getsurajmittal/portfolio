@@ -126,19 +126,6 @@
       "sample": true
     },
     {
-      "slug": "no-phone-after-nine",
-      "section": "life",
-      "title": "No phone after 9 p.m.: one week in",
-      "date": "2026-10-10",
-      "updated": "2026-10-10",
-      "excerpt": "An experiment in boredom. I read more, slept better, and missed nothing that mattered.",
-      "tags": [
-        "Habits"
-      ],
-      "minutes": 1,
-      "sample": true
-    },
-    {
       "slug": "the-last-of-the-rain",
       "section": "life",
       "title": "The last of the rain",
@@ -165,5 +152,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-08T17:28:39.033Z"
+  "updatedAt": "2026-11-08T17:43:58.878Z"
 }
