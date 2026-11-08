@@ -101,6 +101,8 @@ img{max-width:100%;display:block}
 .headline{margin:6px 0 8px;font:900 clamp(36px,5vw,58px)/.98 var(--display);letter-spacing:-.015em;animation:ink 1.2s ease-out .9s both}
 .lead-grid{display:flex;flex-wrap:wrap;gap:20px}
 .np-body{flex:1 1 280px;min-width:0;font-size:15.5px;line-height:1.5;text-align:justify;hyphens:auto}
+/* no photo: the story spans the lead, set in newspaper columns */
+.lead-grid:not(:has(.photo)) .np-body{column-width:280px;column-gap:28px;column-rule:1px solid var(--rule)}
 .np-body p{margin:0 0 10px;text-indent:1.4em}
 .np-body p:first-child{text-indent:0}
 .np-body .city{font:700 11px var(--sans);letter-spacing:.1em}

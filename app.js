@@ -179,11 +179,14 @@
   }
 
   /* ---------- A1 front page ---------- */
+  /* A story's photo, printed halftone until hovered. No photo means no frame at all, and a photo whose file
+     can't be loaded removes its own frame, so the text takes the full width either way. */
   function photoHTML(e, caption) {
     var img = safeUrl(e.image);
-    return '<figure class="photo' + (img ? ' has-img' : '') + '"><div class="photo-frame">' +
-      (img ? '<img src="' + esc(img) + '" alt="' + esc(caption || e.title) + '" loading="lazy">' : '<div class="tone"></div>') +
-      '<div class="dots"></div></div><figcaption><span>' + esc(caption || (img ? e.title : 'Photo to come.')) + '</span><b>Hover to develop</b></figcaption></figure>';
+    if (!img) return '';
+    return '<figure class="photo has-img"><div class="photo-frame">' +
+      '<img src="' + esc(img) + '" alt="' + esc(caption || e.title) + '" loading="lazy" onerror="var f=this.closest(\'figure\');if(f)f.remove()">' +
+      '<div class="dots"></div></div><figcaption><span>' + esc(caption || e.title) + '</span><b>Hover to develop</b></figcaption></figure>';
   }
 
   function renderLead() {
