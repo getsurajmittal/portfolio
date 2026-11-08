@@ -100,6 +100,11 @@ a.tool:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink);colo
 .switch input:checked + span::after{transform:translateX(20px)}
 .switch input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
 
+/* notebook: posts on the paper that have no notebook page yet */
+.adopt{border:2px solid var(--ink);background:var(--card);padding:12px 14px;box-shadow:4px 4px 0 var(--ink)}
+.adopt p{margin:0 0 10px;font:italic 15px/1.45 var(--old)}
+.adopt .msg{margin:8px 0 0;font-style:normal}
+
 /* hub: quote of the day */
 .q-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .q-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,220px) auto;gap:8px 12px;align-items:start;padding:10px 12px;border:1px solid var(--rule);background:var(--sheet)}

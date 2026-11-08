@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:ital@0;1&family=Libre+Franklin:wght@500;600;700;800&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="office.css?v=20261108e">
+<link rel="stylesheet" href="office.css?v=20261108f">
 </head>
 <body>
 
@@ -143,6 +143,11 @@
           <button type="button" data-show="life" aria-pressed="false" class="show-life">Life &amp; Times</button>
         </div>
       </div>
+      <div class="adopt" id="adoptBox" hidden>
+        <p id="adoptText"></p>
+        <button type="button" class="btn dark" id="adoptBtn">Add them to the notebook</button>
+        <p class="msg" id="adoptMsg" role="status"></p>
+      </div>
       <div>
         <div class="section-h tight">Tags</div>
         <div class="tags" id="tagFilter"></div>
@@ -217,7 +222,7 @@
   <div class="wrap view" id="vLoading" hidden><p class="lede">Fetching from the archive…</p></div>
 </div>
 
-<script src="session.js?v=20261108e"></script>
-<script src="office.js?v=20261108e"></script>
+<script src="session.js?v=20261108f"></script>
+<script src="office.js?v=20261108f"></script>
 </body>
 </html>

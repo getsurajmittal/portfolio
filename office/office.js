@@ -349,8 +349,64 @@
     nb.month = ym || nb.month || ymOf(today());
     $('todayBtn').href = '#page/' + today() + '/new';
     show('vLoading');
-    Promise.all([listMonths(), loadMonth(nb.month)]).then(function () { show('vNotebook'); renderNotebook(); }).catch(fail);
+    Promise.all([listMonths(), loadMonth(nb.month)]).then(function () { show('vNotebook'); renderNotebook(); checkOrphans(); }).catch(fail);
   }
+
+  /* ---------- posts on the paper with no notebook page (e.g. ones written straight to the website repo) ----------
+     "Add them to the notebook" gives each one a page on its own date, holding the post's text as a single entry and
+     marked as published, so Edit post and Unpublish work for it like any other. */
+  var orphans = [];
+  function checkOrphans() {
+    $('adoptBox').hidden = true;
+    Promise.all([loadAll(), getIndex()]).then(function (x) {
+      var linked = {};
+      allPages().forEach(function (y) { if (y.pg.post && y.pg.post.slug) linked[y.pg.post.slug] = 1; });
+      orphans = x[1].data.posts.filter(function (p) { return p && p.slug && !linked[p.slug]; });
+      if (!orphans.length) return;
+      $('adoptText').textContent = orphans.length + ' post' + (orphans.length === 1 ? ' is' : 's are') +
+        ' on the paper without a notebook page, so you can’t edit or unpublish ' + (orphans.length === 1 ? 'it' : 'them') + ' from here yet.';
+      $('adoptMsg').textContent = '';
+      $('adoptBtn').hidden = false;
+      $('adoptBox').hidden = false;
+    }).catch(function () { /* the notebook still works without this check */ });
+  }
+  $('adoptBtn').onclick = function () {
+    var btn = this, todo = orphans.slice();
+    if (!todo.length) return;
+    btn.disabled = true; $('adoptMsg').className = 'msg'; $('adoptMsg').textContent = 'Fetching ' + todo.length + ' post' + (todo.length === 1 ? '' : 's') + '…';
+    Promise.all(todo.map(function (p) {
+      return gh.getJSON(cfg.siteRepo, 'posts/' + p.slug + '.json').then(function (r) { return r.data; });
+    })).then(function (posts) {
+      var yms = {};
+      posts.forEach(function (p) { if (validDate(String(p.date || ''))) yms[ymOf(p.date)] = 1; });
+      return Promise.all(Object.keys(yms).map(loadMonth)).then(function () { return posts; });
+    }).then(function (posts) {
+      var dirty = {}, have = {};
+      allPages().forEach(function (y) { if (y.pg.post && y.pg.post.slug) have[y.pg.post.slug] = 1; });
+      posts = posts.filter(function (p) { return p && p.slug && !have[p.slug]; }); /* never add the same post twice, e.g. on a retry */
+      posts.forEach(function (p) {
+        var date = validDate(String(p.date || '')) ? p.date : today();
+        var d = dayFor(date, true);
+        var tags = (p.tags || []).map(function (t) { return String(t).toLowerCase().replace(/[^\w-]+/g, '-').replace(/^-|-$/g, ''); }).filter(Boolean);
+        d.pages.push({
+          id: newId(), title: p.title || '', tags: tags,
+          entries: [{ t: '', text: String(p.body || p.excerpt || p.title || '').trim() }],
+          post: { slug: p.slug, section: p.section === 'life' ? 'life' : 'tech', title: p.title || '', excerpt: p.excerpt || '', tags: p.tags || [],
+            include: [0], date: p.date || date, updated: p.updated || p.date || date, live: true }
+        });
+        touched[date] = 1; dirty[ymOf(date)] = 1;
+      });
+      return Promise.all(Object.keys(dirty).map(saveMonth)).then(function () { return posts.length; });
+    }).then(function (n) {
+      orphans = [];
+      $('adoptMsg').className = 'msg ok';
+      $('adoptMsg').textContent = 'Added ' + n + ' page' + (n === 1 ? '' : 's') + '. Find them under Show → Published.';
+      btn.hidden = true; $('adoptText').textContent = 'Every post on the paper now has a notebook page.';
+      renderNotebook();
+    }).catch(function (e) {
+      $('adoptMsg').className = 'msg'; $('adoptMsg').textContent = 'Not added: ' + e.message + ' Nothing on the paper changed; try again.';
+    }).then(function () { btn.disabled = false; });
+  };
   function renderNotebook() {
     var ym = nb.month, days = months[ym].data.days, t = today();
     $('calTitle').textContent = fmt(ym + '-01', { month: 'long', year: 'numeric' });
@@ -434,7 +490,7 @@
     var shown = page.day.pages.filter(function (p) { return hasContent(p) || p === page.pg; });
     if (shown.indexOf(page.pg) < 0) shown.push(page.pg);
     $('dayPages').innerHTML = shown.map(function (p, i) {
-      return '<a href="#page/' + page.date + '/' + esc(p.id) + '"' + (p === page.pg ? ' aria-current="page"' : '') + '><span class="dp-time">' + esc(firstTime(p) || 'new') + '</span>' +
+      return '<a href="#page/' + page.date + '/' + esc(p.id) + '"' + (p === page.pg ? ' aria-current="page"' : '') + '><span class="dp-time">' + esc(firstTime(p) || (hasContent(p) ? '—' : 'new')) + '</span>' +
         '<span class="dp-title">' + esc(p.title || (hasContent(p) ? firstText(p).slice(0, 40) : 'New page') || 'Page ' + (i + 1)) + '</span>' + secChip(p) + '</a>';
     }).join('') + '<a class="dp-new" href="#page/' + page.date + '/new">＋ New page</a>';
   }
