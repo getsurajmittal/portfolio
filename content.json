@@ -20,7 +20,7 @@
       "website": ""
     },
     "accent": "#B3001B",
-    "updatedAt": "2026-11-08T07:19:35.422Z"
+    "updatedAt": "2026-11-08T13:12:25.071Z"
   },
   "entries": [
     {
@@ -91,6 +91,21 @@
       "imageCaption": "",
       "headline": "",
       "id": "software-engineer-mw6niclf"
+    },
+    {
+      "type": "honour",
+      "date": "2026-06-10",
+      "onResume": true,
+      "title": "Spot Award",
+      "org": "Adtran",
+      "deck": "Spot Award for Driving Efficiency in the Automated Merge Workflow",
+      "body": "Our microservices were spread across many repositories, and keeping feature branches in sync required frequent multi-repo merges. The manual process was error-prone, especially with inconsistent branch names. I built a Jenkins-driven automated merge utility with fully externalized parameters, turning it into a resilient, repeatable workflow. This earned a Spot Award for my contribution.",
+      "link": "",
+      "linkLabel": "",
+      "image": "images/2026-11-08-screenshot-2026-11-08-183704-mw7ul6hl.png",
+      "imageCaption": "",
+      "headline": "",
+      "id": "spot-award-mw7ulf0b"
     }
   ],
   "skills": [
@@ -112,6 +127,18 @@
       "history": [
         1,
         7,
+        9
+      ]
+    },
+    {
+      "name": "LLM SDKs",
+      "group": "Artificial Intelligence",
+      "years": 2,
+      "trend": "up",
+      "history": [
+        1,
+        4,
+        1,
         9
       ]
     }
