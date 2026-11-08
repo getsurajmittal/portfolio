@@ -64,15 +64,16 @@
       default: return e.title;
     }
   }
+  /* The ticker carries career and certification news only; posts have their own strip below the fold. */
+  var TICKER_TYPES = ['role', 'certification', 'course', 'honour'];
   function tickerLine(e) {
     var n = D.site.name;
     switch (e.type) {
       case 'certification': return n + ' clears ' + e.title + (e.org ? ' — ' + e.org + ' confirms' : '');
-      case 'project': return e.title + ' goes live';
-      case 'column': return 'New column: “' + e.title + '”';
-      case 'role': return n + ' joins ' + e.org;
+      case 'course': return n + ' completes ' + e.title + (e.org ? ' with ' + e.org : '');
+      case 'role': return n + ' joins ' + e.org + (e.title ? ' as ' + e.title : '');
       case 'honour': return n + ' receives ' + e.title;
-      default: return headline(e);
+      default: return e.title;
     }
   }
   function isNew(e) {
@@ -92,7 +93,9 @@
     $('vol').textContent = String(new Date().getFullYear() - (+first) + 1);
     $('profile').textContent = s.profile || '';
 
-    var items = editions.slice(0, 6).map(function (e) { return '<span>' + esc(tickerLine(e)) + '</span><span aria-hidden="true">◆</span>'; }).join('');
+    var news = editions.filter(function (e) { return TICKER_TYPES.indexOf(e.type) > -1; });
+    document.querySelector('.ticker').hidden = !news.length;
+    var items = news.slice(0, 6).map(function (e) { return '<span>' + esc(tickerLine(e)) + '</span><span aria-hidden="true">◆</span>'; }).join('');
     $('tickerRun').innerHTML = '<span class="half">' + items + '</span><span class="half" aria-hidden="true">' + items + '</span>';
 
     var c = s.contact || {};
@@ -238,22 +241,135 @@
   }
 
   /* ---------- A3 opinion ---------- */
+  /* ---------- posts (The Column) ----------
+     posts/index.json  {"posts":[{slug,title,date,updated?,excerpt?,tags?[],minutes?}]}  — the published list
+     posts/<slug>.json {slug,title,date,updated?,excerpt?,tags?[],minutes?,body}       — body is Markdown (small subset)
+     Both are written by the Back Office when a post is published; a missing index just means no posts. */
+  var POSTS = [];
+  var SLUG = /^[a-z0-9][a-z0-9-]{0,80}$/;
+  function loadPosts() {
+    return fetch('posts/index.json?v=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : { posts: [] }; })
+      .then(function (j) {
+        POSTS = ((j && j.posts) || []).filter(function (p) { return p && p.title && SLUG.test(String(p.slug)); })
+          .sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+      })
+      .catch(function () { POSTS = []; });
+  }
+  function postMeta(p) {
+    return esc(fmt(p.date)) + (p.minutes ? ' · ' + esc(p.minutes) + ' min read' : '');
+  }
+
+  /* Markdown subset: paragraphs, ## / ### headings, - and 1. lists, > quotes, ``` code, `code`, **bold**, *italic*,
+     [link](url), ![alt](images/…). Everything is escaped first; no raw HTML gets through. */
+  function inlineMd(s) {
+    var codes = [];
+    s = esc(s).replace(/`([^`]+)`/g, function (_, c) { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+    s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, function (_, alt, u) {
+      u = safeUrl(u.replace(/&amp;/g, '&')); return u ? '<img src="' + esc(u) + '" alt="' + alt + '" loading="lazy">' : alt;
+    });
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, t, u) {
+      u = safeUrl(u.replace(/&amp;/g, '&')); return u ? '<a href="' + esc(u) + '"' + (/^https?:/i.test(u) ? ' target="_blank" rel="noopener"' : '') + '>' + t + '</a>' : t;
+    });
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<i>$2</i>');
+    return s.replace(/\u0000(\d+)\u0000/g, function (_, i) { return '<code>' + codes[+i] + '</code>'; });
+  }
+  function md(text) {
+    var out = [], parts = String(text || '').replace(/\r\n?/g, '\n').split(/^```[^\n]*\n?/m);
+    parts.forEach(function (part, i) {
+      if (i % 2) { out.push('<pre><code>' + esc(part.replace(/\n$/, '')) + '</code></pre>'); return; }
+      part.split(/\n\s*\n/).forEach(function (b) {
+        b = b.trim(); if (!b) return;
+        var lines = b.split('\n'), m;
+        if ((m = /^(#{2,3})\s+(.*)$/.exec(b)) && lines.length === 1) out.push('<h' + m[1].length + '>' + inlineMd(m[2]) + '</h' + m[1].length + '>');
+        else if (lines.every(function (l) { return /^[-*]\s+/.test(l); })) out.push('<ul>' + lines.map(function (l) { return '<li>' + inlineMd(l.replace(/^[-*]\s+/, '')) + '</li>'; }).join('') + '</ul>');
+        else if (lines.every(function (l) { return /^\d+[.)]\s+/.test(l); })) out.push('<ol>' + lines.map(function (l) { return '<li>' + inlineMd(l.replace(/^\d+[.)]\s+/, '')) + '</li>'; }).join('') + '</ol>');
+        else if (lines.every(function (l) { return /^>\s?/.test(l); })) out.push('<blockquote>' + inlineMd(lines.map(function (l) { return l.replace(/^>\s?/, ''); }).join(' ')) + '</blockquote>');
+        else out.push('<p>' + lines.map(inlineMd).join('<br>') + '</p>');
+      });
+    });
+    return out.join('');
+  }
+
+  /* Two strips below the fold — tech ("From The Column") and life ("Life & Times").
+     Cards drift sideways in a loop (life the other way); hover, focus or Pause stops them. */
+  function sectionOf(p) { return p.section === 'life' ? 'life' : 'tech'; }
+  function renderStrip() { renderSectionStrip('tech'); renderSectionStrip('life'); }
+  function renderSectionStrip(sec) {
+    var wrap = $('strip-' + sec), win = wrap.querySelector('.strip'), run = wrap.querySelector('.strip-run');
+    var list = POSTS.filter(function (p) { return sectionOf(p) === sec; });
+    wrap.hidden = !list.length;
+    if (!list.length) return;
+    var cards = list.slice(0, 8).map(function (p) {
+      return '<a class="post-card" href="#A3/' + esc(p.slug) + '"><div class="meta">' + postMeta(p) + '</div><h4>' + esc(p.title) + '</h4>' +
+        (p.excerpt ? '<p>' + esc(p.excerpt) + '</p>' : '') +
+        ((p.tags || []).length ? '<div class="tags">' + p.tags.slice(0, 3).map(esc).join(' · ') + '</div>' : '') + '</a>';
+    }).join('');
+    run.innerHTML = cards;
+    /* Only loop when the cards overflow the strip; a few cards that fit just sit still. */
+    var still = reduced || run.scrollWidth <= win.clientWidth;
+    win.classList.toggle('still', still);
+    wrap.querySelector('.strip-pause').hidden = still;
+    if (!still) {
+      run.innerHTML = cards + cards.replace(/<a class="post-card"/g, '<a class="post-card" tabindex="-1" aria-hidden="true"');
+      run.style.setProperty('--lap', Math.max(30, Math.min(8, list.length) * 10) + 's');
+    }
+  }
+
+  function renderPost(slug) {
+    var p = POSTS.find(function (x) { return x.slug === slug; });
+    var box = $('columns');
+    box.innerHTML = '<p class="note" style="margin-top:12px">Fetching the column…</p>';
+    fetch('posts/' + encodeURIComponent(slug) + '.json?v=' + encodeURIComponent(p.updated || p.date || ''), { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (post) {
+        if (location.hash !== '#A3/' + slug) return;
+        box.innerHTML = '<div class="column-full"><div class="meta" style="margin-top:12px">' + postMeta(post) +
+          (post.updated && post.updated !== post.date ? ' · updated ' + esc(fmt(post.updated)) : '') + '</div>' +
+          '<h2 class="feature-head">' + esc(post.title) + '</h2><div class="byline">By ' + esc(D.site.name) + '</div>' +
+          '<div class="post-body">' + md(post.body) + '</div>' +
+          ((post.tags || []).length ? '<div class="post-tags">' + post.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
+          '<p><a class="lnk it" style="padding:0" href="#A3">◂ All columns</a></p></div>';
+        document.title = post.title + ' — ' + D.site.name;
+      })
+      .catch(function () {
+        if (location.hash !== '#A3/' + slug) return;
+        box.innerHTML = '<p class="note" style="margin-top:12px">This column could not be loaded. It may have been taken down.</p><p><a class="lnk it" style="padding:0" href="#A3">◂ All columns</a></p>';
+      });
+  }
+
+  function postListItem(p) {
+    return { date: p.date, html: '<a class="col-card story" href="#A3/' + esc(p.slug) + '"><div class="meta">' + postMeta(p) + '</div><h3><span class="hl">' + esc(p.title) + '</span></h3><p class="excerpt">' + esc(p.excerpt || '') + ' <b style="font-style:normal">Read ▸</b></p></a>' };
+  }
   function renderOpinion(id) {
+    if (id && id !== 'life' && id !== 'tech' && POSTS.some(function (p) { return p.slug === id; })) { renderPost(id); renderCorrections(); return; }
     var cols = D.entries.filter(function (e) { return e.type === 'column'; }).sort(function (a, b) { return String(b.date).localeCompare(a.date); });
     var open = id && cols.find(function (c) { return c.id === id; });
-    if (open && paras(open.body).length) {
-      $('columns').innerHTML = '<div class="column-full"><div class="meta" style="margin-top:12px">' + esc(fmt(open.date)) + (open.minutes ? ' · ' + esc(open.minutes) + ' min read' : '') + '</div>' +
-        '<h2 class="feature-head">' + esc(open.title) + '</h2><div class="byline">By ' + esc(D.site.name) + '</div>' +
-        paras(open.body).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
-        '<p><a class="lnk it" style="padding:0" href="#A3">◂ All columns</a></p></div>';
-    } else {
-      $('columns').innerHTML = cols.map(function (c) {
+    if (!open || !paras(open.body).length) {
+      /* list: tech posts (with any older column entries), then Life & Times */
+      var life = POSTS.filter(function (p) { return sectionOf(p) === 'life'; }).map(postListItem);
+      var list = POSTS.filter(function (p) { return sectionOf(p) === 'tech'; }).map(postListItem);
+      cols.forEach(function (c) {
         var ext = safeUrl(c.link);
         var href = paras(c.body).length ? '#A3/' + esc(c.id) : (ext ? esc(ext) : '#A3');
-        return '<a class="col-card story" href="' + href + '"' + (ext && !paras(c.body).length ? ' rel="noopener"' : '') + '><div class="meta">' + esc(fmt(c.date)) + (c.minutes ? ' · ' + esc(c.minutes) + ' min read' : '') + '</div>' +
-          '<h3><span class="hl">' + esc(c.title) + '</span></h3><p class="excerpt">' + esc(c.excerpt || '') + ' <b style="font-style:normal">Read ▸</b></p></a>';
-      }).join('') || '<p class="note">The editor has not filed a column yet.</p>';
+        list.push({ date: c.date, html: '<a class="col-card story" href="' + href + '"' + (ext && !paras(c.body).length ? ' rel="noopener"' : '') + '><div class="meta">' + esc(fmt(c.date)) + (c.minutes ? ' · ' + esc(c.minutes) + ' min read' : '') + '</div>' +
+          '<h3><span class="hl">' + esc(c.title) + '</span></h3><p class="excerpt">' + esc(c.excerpt || '') + ' <b style="font-style:normal">Read ▸</b></p></a>' });
+      });
+      list.sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+      var html = function (xs) { return xs.map(function (x) { return x.html; }).join(''); };
+      $('columns').innerHTML = (list.length || !life.length ? '<h2 class="col-section tech" id="sec-tech">From The Column</h2>' + (html(list) || '<p class="note">The editor has not filed a column yet.</p>') : '') +
+        (life.length ? '<h2 class="col-section" id="sec-life">Life &amp; Times</h2>' + html(life) : '');
+      renderCorrections();
+      if (id === 'life' || id === 'tech') setTimeout(function () { var h = $('sec-' + id); if (h) h.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); }, 350);
+      return;
     }
+    $('columns').innerHTML = '<div class="column-full"><div class="meta" style="margin-top:12px">' + esc(fmt(open.date)) + (open.minutes ? ' · ' + esc(open.minutes) + ' min read' : '') + '</div>' +
+      '<h2 class="feature-head">' + esc(open.title) + '</h2><div class="byline">By ' + esc(D.site.name) + '</div>' +
+      paras(open.body).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
+      '<p><a class="lnk it" style="padding:0" href="#A3">◂ All columns</a></p></div>';
+    renderCorrections();
+  }
+  function renderCorrections() {
     var cor = (D.corrections || []).filter(Boolean);
     $('correctionsWrap').hidden = !cor.length;
     $('corrections').innerHTML = cor.map(function (t) { return '<p class="correction">' + esc(t) + '</p>'; }).join('');
@@ -307,6 +423,7 @@
     var sub = h[1] ? decodeURIComponent(h[1]) : null;
     if (code === 'A2') renderFeature(sub);
     if (code === 'A3') renderOpinion(sub);
+    if (code === 'A1' && current !== null && POSTS.length) setTimeout(renderStrip, 0); /* re-measure once A1 is visible */
     if (code === 'B1') renderRecord();
     document.querySelectorAll('.page').forEach(function (sec) {
       var on = sec.dataset.page === code;
@@ -378,6 +495,13 @@
     syncNight();
     $('prevPage').onclick = function () { location.hash = this.dataset.to; };
     $('nextPage').onclick = function () { location.hash = this.dataset.to; };
+    document.querySelectorAll('.strip-pause').forEach(function (b) {
+      b.onclick = function () {
+        var on = $('strip-' + b.dataset.strip).classList.toggle('paused');
+        b.textContent = on ? '▶ Play' : '❚❚ Pause';
+        b.setAttribute('aria-pressed', String(on));
+      };
+    });
     $('extraClose').onclick = function () { $('extra').hidden = true; };
     $('extraGo').onclick = function () { $('extra').hidden = true; edIdx = 0; renderLead(); };
     document.addEventListener('click', function (ev) {
@@ -413,6 +537,12 @@
     renderChrome(); renderLead(); renderInside(); renderLetters(); renderBelow();
     tickClock(); setInterval(tickClock, 15000);
     wire(); setupScroll(); route(); restartLetters(); setupExtra();
+    loadPosts().then(function () {
+      renderStrip();
+      if (/^#A3/.test(location.hash)) renderOpinion((location.hash.split('/')[1] && decodeURIComponent(location.hash.split('/')[1])) || null);
+    });
+    var rs = null;
+    window.addEventListener('resize', function () { clearTimeout(rs); rs = setTimeout(renderStrip, 250); });
   }
 
   function load() {

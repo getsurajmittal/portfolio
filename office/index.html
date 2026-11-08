@@ -104,7 +104,7 @@
   <!-- notebook list -->
   <div class="wrap view nb" id="vNotebook" hidden>
     <aside class="nb-side">
-      <a class="btn dark big" href="#" id="todayBtn">＋ Today's page</a>
+      <a class="btn dark big" href="#" id="todayBtn">＋ New page today</a>
       <label class="search">Search the notebook<input type="search" id="nbSearch" placeholder="word, idea, tag…"></label>
       <div class="cal">
         <div class="cal-head">
@@ -135,6 +135,7 @@
       <span id="dayTitle"></span>
       <a id="nextDay" href="#">›</a>
     </nav>
+    <nav class="day-pages" id="dayPages" aria-label="Pages on this day"></nav>
     <article class="sheet-big">
       <div class="stamp" id="dayStamp"></div>
       <label><span class="sr">Title</span><input type="text" id="pTitle" class="p-title" placeholder="Title (optional)" autocomplete="off"></label>
@@ -148,10 +149,42 @@
     <div class="page-foot">
       <span id="wordCount"></span>
       <span class="actions">
+        <span class="pub-state" id="pubState"></span>
+        <button type="button" class="btn dark" id="pubBtn">Publish…</button>
         <button type="button" class="btn" id="dlPage">Download page</button>
         <button type="button" class="btn danger" id="delPage">Delete page</button>
       </span>
     </div>
+
+    <!-- publish this page as a post on the paper -->
+    <form class="pub" id="pubForm" hidden aria-labelledby="pubH" novalidate>
+      <h2 id="pubH">Publish this page</h2>
+      <p class="lede">Your notebook page stays exactly as it is. The paper gets a separate copy, made from the entries you tick below.</p>
+      <fieldset class="dest">
+        <legend>Where should it appear?</legend>
+        <label class="opt tech"><input type="radio" name="pubSec" value="tech"><span class="opt-name">From The Column</span><span class="opt-desc">Tech, work and what I’m learning. The red strip.</span></label>
+        <label class="opt life"><input type="radio" name="pubSec" value="life"><span class="opt-name">Life &amp; Times</span><span class="opt-desc">What’s new in life. The green strip just below it.</span></label>
+      </fieldset>
+      <div class="grid2">
+        <label>Headline<input id="pubTitle" autocomplete="off" placeholder="Give it a headline"></label>
+        <label>Link <span class="hint" id="pubSlugHint"></span><input id="pubSlug" autocomplete="off" spellcheck="false"></label>
+        <label>Tags <span class="hint">comma separated, up to three show on the card</span><input id="pubTags" autocomplete="off"></label>
+        <label class="full">Excerpt <span class="hint">one or two lines for the card</span><textarea id="pubEx" rows="2"></textarea></label>
+      </div>
+      <div class="pub-entries">
+        <div class="pub-lbl">Entries to include</div>
+        <div id="pubEntries"></div>
+      </div>
+      <div class="pub-lbl">How the card will look</div>
+      <div id="pubPreview" class="pv"></div>
+      <p class="pub-warn">Anyone will be able to read this. Unpublishing takes it off the site within about a minute, but copies people already saved can’t be pulled back.</p>
+      <div class="actions">
+        <button type="submit" class="btn big" id="pubGo">Publish</button>
+        <button type="button" class="btn" id="pubCancel">Cancel</button>
+        <button type="button" class="btn danger" id="pubUnpub" hidden>Unpublish</button>
+      </div>
+      <p class="msg" id="pubMsg" role="alert"></p>
+    </form>
   </div>
 
   <div class="wrap view" id="vLoading" hidden><p class="lede">Fetching from the archive…</p></div>

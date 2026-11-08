@@ -3,7 +3,7 @@
   --bg:#F3F0E7; --ink:#161512; --sub:#4A4740; --rule:#C9C4B6;
   --grain:rgba(0,0,0,.045); --photo:#E4E0D4;
   --toneA:#C9B48A; --toneB:#8C7A5B; --toneC:#3E372B;
-  --up:#0B6E3A; --red:#B3001B;
+  --up:#0B6E3A; --red:#B3001B; --life:#1E5E52;
   --serif:'Libre Caslon Text',Georgia,serif;
   --display:'Playfair Display',Georgia,serif;
   --old:'Old Standard TT',Georgia,serif;
@@ -13,7 +13,7 @@
 :root[data-theme="night"]{
   --bg:#17160F; --ink:#E9E5DA; --sub:#B5B0A3; --rule:#45423A;
   --grain:rgba(255,255,255,.035); --photo:#26241D;
-  --toneA:#8A7E62; --toneB:#4A4334; --toneC:#22201A; --up:#6FD39A;
+  --toneA:#8A7E62; --toneB:#4A4334; --toneC:#22201A; --up:#6FD39A; --life:#5FBFA9;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -134,6 +134,42 @@ img{max-width:100%;display:block}
 /* below the fold */
 .fold{display:flex;align-items:center;gap:12px;margin:22px 0 14px;font:italic 12px var(--old);color:var(--sub)}
 .fold span{flex:1;border-top:3px double var(--ink)}
+/* From The Column: published posts drifting sideways below the fold */
+.strip-wrap{border-bottom:1px solid var(--ink);padding:10px 0 12px}
+.strip-wrap:last-of-type{margin-bottom:18px}
+.strip-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 12px}
+.strip-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.strip-sub{font:italic 13px var(--old);color:var(--sub)}
+.strip-ctrls{display:flex;gap:14px}
+.strip-wrap.life .strip-run{animation-direction:reverse}
+.strip-name{font:italic 700 26px/1 var(--display);color:var(--life);letter-spacing:-.01em}
+.life .post-card{border-right-style:dashed}
+.life .post-card h4{font:italic 700 20px/1.18 var(--display)}
+.life .post-card p{font:italic 15px/1.45 var(--old)}
+.life .post-card .tags,.life .post-card .meta{color:var(--life)}
+.col-section{font:italic 700 24px var(--display);color:var(--life);border-bottom:1px solid var(--ink);padding-bottom:6px;margin:30px 0 4px}
+.col-section.tech{font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-top:16px}
+.strip{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent)}
+.strip-run{display:flex;width:max-content;animation:tick var(--lap,48s) linear infinite}
+.strip:hover .strip-run,.strip:focus-within .strip-run,.strip-wrap.paused .strip-run{animation-play-state:paused}
+.strip.still{-webkit-mask-image:none;mask-image:none}
+.strip.still .strip-run{animation:none}
+.post-card{width:280px;flex:none;padding:4px 18px;border-right:1px solid var(--rule);text-decoration:none;display:flex;flex-direction:column;gap:5px}
+.post-card:hover h4{text-decoration:underline;text-underline-offset:3px}
+.post-card h4{margin:0;font:700 19px/1.15 var(--old);text-wrap:balance}
+.post-card p{margin:0;font-size:14px;line-height:1.45;color:var(--sub)}
+.post-card .tags{font:600 11px var(--sans);color:var(--red);letter-spacing:.04em}
+/* a post on A3 */
+.post-body{max-width:68ch;font-size:16.5px;line-height:1.65}
+.post-body h2,.post-body h3{font:700 24px/1.2 var(--old);margin:26px 0 8px}
+.post-body h3{font-size:20px}
+.post-body blockquote{margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--red);font:italic 18px/1.5 var(--old)}
+.post-body code{font:14px/1.5 ui-monospace,Consolas,monospace;background:var(--photo);padding:1px 4px}
+.post-body pre{overflow-x:auto;background:var(--photo);padding:12px 14px}
+.post-body pre code{padding:0;background:none}
+.post-body img{margin:16px 0}
+.post-tags{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 4px}
+.post-tags span{font:700 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--ink);padding:2px 8px}
 .below{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .col{padding:0 18px}
 .col:first-child{padding-left:0}
@@ -247,6 +283,8 @@ img{max-width:100%;display:block}
   *,*::before,*::after{animation:none !important;transition:none !important}
   .reveal{opacity:1;transform:none}
   html{scroll-behavior:auto}
+  .strip{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+  .strip-pause{display:none !important}
 }
 @media print{
   .minibar,.ticker,.pager,.extra,.dateline-ctrls{display:none !important}
