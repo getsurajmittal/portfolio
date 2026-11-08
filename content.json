@@ -20,7 +20,7 @@
       "website": ""
     },
     "accent": "#B3001B",
-    "updatedAt": "2026-11-08T13:12:25.071Z"
+    "updatedAt": "2026-11-08T13:16:45.683Z"
   },
   "entries": [
     {
@@ -106,6 +106,22 @@
       "imageCaption": "",
       "headline": "",
       "id": "spot-award-mw7ulf0b"
+    },
+    {
+      "type": "certification",
+      "date": "2025-09-18",
+      "onResume": true,
+      "title": "Oracle Cloud Infrastructure",
+      "org": "Oracle",
+      "credentialId": "1Z0-1122-25",
+      "deck": "Oracle Cloud Infrastructure 2025 AI Foundations Associate",
+      "body": "The Oracle Cloud Infrastructure (OCI) AI Foundations certification is designed to introduce learners to the fundamental concepts of artificial intelligence (AI) and machine learning (ML), with a specific focus on the practical application of these technologies within the Oracle Cloud Infrastructure. This course is ideal for beginners and provides an accessible entry point for those looking to enhance their understanding of AI and ML without the requirement of prior extensive technical experience.",
+      "link": "https://catalog-education.oracle.com/ords/certview/sharebadge?id=A016AE9DE47D45FCDFE78E254BE70597EB06851C5866CF0333F76043759920DD",
+      "linkLabel": "verify",
+      "image": "",
+      "imageCaption": "",
+      "headline": "",
+      "id": "oracle-cloud-infrastructure-mw7uwbe2"
     }
   ],
   "skills": [
