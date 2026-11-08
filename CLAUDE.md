@@ -61,7 +61,7 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
 
 ## Hiding sections (settings.json)
 
-`settings.json` in the website repo = `{hidden: ["tech"|"life"|"letters"|"corrections"], updatedAt}`. It's written by the switches under "On the paper" on the Back Office hub (`office.js`, `VIS`). `app.js` loads it alongside `content.json`. Hidden post sections are filtered out of `POSTS`, so they vanish from the strips, A3 and direct links; hidden letters and corrections hide their boxes. It only hides things on the website: the files stay in the public repo. A missing file means nothing is hidden.
+`settings.json` in the website repo = `{hidden: ["tech"|"life"|"letters"|"corrections"], quotes: [{text, by}], updatedAt}`. Every writer keeps the other keys (`Object.assign` onto the latest file). It's written by the switches under "On the paper" on the Back Office hub (`office.js`, `VIS`). `app.js` loads it alongside `content.json`. Hidden post sections are filtered out of `POSTS`, so they vanish from the strips, A3 and direct links; hidden letters and corrections hide their boxes. It only hides things on the website: the files stay in the public repo. A missing file means nothing is hidden.
 
 ## How the paper renders (app.js)
 
@@ -71,7 +71,7 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
   - A2: projects and `featured` entries as case studies.
   - A3: columns and corrections.
   - B1: scoreboard counts, honours, and "The Morgue" (every edition, grouped by year).
-- Masthead ears: the left one is an analog clock showing Bangalore time (`startClock`, sweeping second hand, ticks once a second with reduced motion). The right one shows "Last updated" (`renderLastUpdated`): the newest of `content.json` `site.updatedAt` (stamped by the Desk on publish) and `posts/index.json` `updatedAt` (stamped by the Notebook on publish/unpublish), falling back to the newest entry or post date.
+- Masthead ears: the left one is **Quote of the day** (`renderQuote`): quotes come from `settings.json` `quotes: [{text, by}]`, edited in the Back Office hub, and each Bangalore day shows the next one in order (day number modulo list length; the hub marks today's). With no quotes the box is `visibility:hidden` so the masthead stays centred. The right ear shows "Last updated" (`renderLastUpdated`): the newest of `content.json` `site.updatedAt` (stamped by the Desk on publish) and `posts/index.json` `updatedAt` (stamped by the Notebook on publish/unpublish), falling back to the newest entry or post date. `watchDay` re-checks the date each minute to roll the quote and dateline over at midnight.
 - The LATEST ticker scrolls at a steady ~60 px/s (`fitTicker` repeats short news to fill the bar). It shows only career and certification news: `TICKER_TYPES` = role, certification, course, honour. It shows the 6 newest, in sentence case (`tickerLine`), and hides itself when there are none.
 - Certifications from the last 45 days get a NEW stamp. There's also a night theme toggle.
 

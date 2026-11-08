@@ -100,6 +100,19 @@ a.tool:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink);colo
 .switch input:checked + span::after{transform:translateX(20px)}
 .switch input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
 
+/* hub: quote of the day */
+.q-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.q-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,220px) auto;gap:8px 12px;align-items:start;padding:10px 12px;border:1px solid var(--rule);background:var(--sheet)}
+.q-row.today{border:2px solid var(--ink);padding:9px 11px}
+.q-row label{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.q-row textarea{font:italic 16px/1.45 var(--old);padding:8px 10px;min-height:64px;resize:vertical;letter-spacing:0;text-transform:none}
+.q-row input{font:15px var(--serif);min-height:40px;letter-spacing:0;text-transform:none}
+.q-meta{grid-column:1/-1;display:flex;gap:12px;align-items:center;font:600 12px var(--sans);color:var(--sub)}
+.q-meta .long{color:var(--red)}
+.q-today{font:800 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--light);padding:2px 6px}
+.q-row .rm{align-self:end;min-height:40px}
+@media (max-width:640px){.q-row{grid-template-columns:1fr}}
+
 /* notebook list */
 .nb{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
 .nb-side{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:22px}

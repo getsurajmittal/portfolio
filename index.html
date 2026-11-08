@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800;900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261108c">
+<link rel="stylesheet" href="styles.css?v=20261108d">
 <script>try{if(localStorage.getItem('gz-theme')==='night')document.documentElement.dataset.theme='night'}catch(e){}</script>
 </head>
 <body>
@@ -23,16 +23,9 @@
 
 <div class="wrap paper" id="paper">
   <header class="masthead-row" id="mastheadRow">
-    <div class="ear ear-clock">
-      <svg class="clock" viewBox="0 0 100 100" role="img" aria-labelledby="clockLbl">
-        <circle cx="50" cy="50" r="46" class="clock-face"/>
-        <g class="clock-ticks" id="clockTicks"></g>
-        <line id="hHand" class="hand hand-h" x1="50" y1="56" x2="50" y2="27"/>
-        <line id="mHand" class="hand hand-m" x1="50" y1="58" x2="50" y2="15"/>
-        <line id="sHand" class="hand hand-s" x1="50" y1="62" x2="50" y2="11"/>
-        <circle cx="50" cy="50" r="3" class="clock-pin"/>
-      </svg>
-      <div class="clock-cap"><div class="ear-h">Bangalore time</div><span id="clockLbl"></span></div>
+    <div class="ear ear-quote" id="quoteEar">
+      <div class="ear-h">Quote of the day</div>
+      <blockquote class="qotd" id="qotd"></blockquote>
     </div>
     <h1 class="masthead" data-brand>The Gazette</h1>
     <div class="ear ear-r">
@@ -162,6 +155,6 @@
 </div>
 
 <noscript><p class="wrap">This paper needs JavaScript to print. Please enable it.</p></noscript>
-<script src="app.js?v=20261108c"></script>
+<script src="app.js?v=20261108d"></script>
 </body>
 </html>

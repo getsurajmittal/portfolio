@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:ital@0;1&family=Libre+Franklin:wght@500;600;700;800&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="office.css?v=20261108c">
+<link rel="stylesheet" href="office.css?v=20261108d">
 </head>
 <body>
 
@@ -102,6 +102,17 @@
       <p class="vis-note">Switch a section off to hide it from the website. Switch it back on any time; nothing is deleted.</p>
       <div id="visList" class="vis-list"></div>
       <p class="msg ok" id="visMsg" role="status"></p>
+    </div>
+
+    <div class="section-h">Quote of the day</div>
+    <div class="vis">
+      <p class="vis-note">The paper shows one of these beside the masthead each day, taking them in order. Keep each to about 120 characters so it fits the box.</p>
+      <div id="quoteList" class="q-list"></div>
+      <div class="actions">
+        <button type="button" class="btn" id="addQuote">＋ Add quote</button>
+        <button type="button" class="btn dark" id="saveQuotes">Save quotes</button>
+      </div>
+      <p class="msg ok" id="quoteMsg" role="status"></p>
     </div>
 
     <div class="section-h">Recently in the notebook</div>
@@ -206,7 +217,7 @@
   <div class="wrap view" id="vLoading" hidden><p class="lede">Fetching from the archive…</p></div>
 </div>
 
-<script src="session.js?v=20261108c"></script>
-<script src="office.js?v=20261108c"></script>
+<script src="session.js?v=20261108d"></script>
+<script src="office.js?v=20261108d"></script>
 </body>
 </html>

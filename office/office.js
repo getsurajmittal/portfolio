@@ -234,9 +234,70 @@
   }
   function openVis() {
     $('visList').innerHTML = '<p class="vis-note">Checking the paper…</p>';
-    loadSettings().then(function (r) { settings = r; renderVis(); })
+    $('quoteList').innerHTML = '';
+    loadSettings().then(function (r) { settings = r; renderVis(); quoteDraft = null; renderQuotes(); })
       .catch(function (e) { $('visList').innerHTML = '<p class="msg">' + esc(e.message) + '</p>'; });
   }
+
+  /* ---------- quote of the day (settings.json → quotes: [{text, by}]) ---------- */
+  var quoteDraft = null, QUOTE_MAX = 120;
+  /* the same pick as the paper: day number in Bangalore, modulo the list */
+  function todaysQuoteIndex(n) {
+    if (!n) return -1;
+    var d = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }).split('-');
+    return Math.floor(Date.UTC(+d[0], +d[1] - 1, +d[2]) / 864e5) % n;
+  }
+  function renderQuotes() {
+    if (!quoteDraft) quoteDraft = (settings.data.quotes || []).map(function (q) { return { text: q.text || '', by: q.by || '' }; });
+    var filled = quoteDraft.filter(function (q) { return q.text.trim(); }).length, k = 0;
+    var ti = todaysQuoteIndex(filled);
+    $('quoteList').innerHTML = quoteDraft.map(function (q, i) {
+      var isToday = q.text.trim() && (k++ === ti), len = q.text.trim().length;
+      return '<div class="q-row' + (isToday ? ' today' : '') + '"><label>Quote<textarea data-qi="' + i + '" data-qk="text" rows="2" placeholder="Write a quote…">' + esc(q.text) + '</textarea></label>' +
+        '<label>By <span class="hint">optional</span><input data-qi="' + i + '" data-qk="by" value="' + esc(q.by) + '" placeholder="Who said it"></label>' +
+        '<button type="button" class="btn rm" data-rmq="' + i + '" aria-label="Remove quote ' + (i + 1) + '">Remove</button>' +
+        '<div class="q-meta">' + (isToday ? '<span class="q-today">On the paper today</span>' : '') +
+        '<span class="' + (len > QUOTE_MAX ? 'long' : '') + '" data-qlen="' + i + '">' + len + ' / ' + QUOTE_MAX + ' characters' + (len > QUOTE_MAX ? ' · may be cut short on the paper' : '') + '</span></div></div>';
+    }).join('') || '<p class="vis-note">No quotes yet. Add one and the box beside the masthead will show it.</p>';
+  }
+  $('quoteList').addEventListener('input', function (ev) {
+    var t = ev.target; if (t.dataset.qi == null) return;
+    var i = +t.dataset.qi; quoteDraft[i][t.dataset.qk] = t.value;
+    $('quoteMsg').className = 'msg'; $('quoteMsg').textContent = 'Unsaved changes';
+    if (t.dataset.qk === 'text') {
+      var len = t.value.trim().length, el = document.querySelector('[data-qlen="' + i + '"]');
+      if (el) { el.textContent = len + ' / ' + QUOTE_MAX + ' characters' + (len > QUOTE_MAX ? ' · may be cut short on the paper' : ''); el.className = len > QUOTE_MAX ? 'long' : ''; }
+    }
+  });
+  $('quoteList').addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-rmq]'); if (!b) return;
+    quoteDraft.splice(+b.dataset.rmq, 1); renderQuotes();
+    $('quoteMsg').className = 'msg'; $('quoteMsg').textContent = 'Unsaved changes';
+  });
+  $('addQuote').onclick = function () {
+    if (!settings) return;
+    quoteDraft.push({ text: '', by: '' }); renderQuotes();
+    var all = document.querySelectorAll('#quoteList textarea'); if (all.length) all[all.length - 1].focus();
+  };
+  $('saveQuotes').onclick = function () {
+    if (!settings) return;
+    var btn = this, quotes = quoteDraft.map(function (q) { return { text: q.text.trim(), by: q.by.trim() }; }).filter(function (q) { return q.text; });
+    btn.disabled = true; $('quoteMsg').className = 'msg ok'; $('quoteMsg').textContent = 'Saving…';
+    var apply = function (r) {
+      var next = Object.assign({}, r.data, { quotes: quotes, updatedAt: new Date().toISOString() });
+      return gh.putJSON(cfg.siteRepo, 'settings.json', next, r.sha, 'Quotes of the day: ' + quotes.length)
+        .then(function (j) { settings = { sha: j.content.sha, data: next }; });
+    };
+    apply(settings).catch(function (e) {
+      if (e.status === 409 || e.status === 422) return loadSettings().then(apply);
+      throw e;
+    }).then(function () {
+      quoteDraft = null; renderQuotes(); renderVis();
+      $('quoteMsg').className = 'msg ok'; $('quoteMsg').textContent = 'Saved ' + quotes.length + ' quote' + (quotes.length === 1 ? '' : 's') + ' · on the paper in about a minute';
+    }).catch(function (e) {
+      $('quoteMsg').className = 'msg'; $('quoteMsg').textContent = 'Not saved: ' + e.message;
+    }).then(function () { btn.disabled = false; });
+  };
   $('visList').addEventListener('change', function (ev) {
     var box = ev.target.closest('[data-vis]'); if (!box || !settings) return;
     var key = box.dataset.vis, show = box.checked, name = VIS.find(function (v) { return v.key === key; }).name;

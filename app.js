@@ -133,38 +133,26 @@
     $('contact').innerHTML = '<span class="links">Correspondence: ' + links.join(' · ') + '</span><span>© ' + new Date().getFullYear() + ' ' + esc(s.name) + ' · Printed in ' + esc(s.city) + ' · <a class="staff" href="office/">Staff entrance</a></span>';
   }
 
-  /* ---------- analog clock: Bangalore time, second hand sweeps (ticks once a second with reduced motion) ---------- */
-  var TZ = 'Asia/Kolkata';
-  function zoned(d) { /* the wall-clock parts of d in Bangalore, whatever the visitor's own time zone */
-    var p = {};
-    new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hour: 'numeric', minute: 'numeric', second: 'numeric', hourCycle: 'h23' })
-      .formatToParts(d).forEach(function (x) { p[x.type] = +x.value; });
-    return p;
+  /* ---------- quote of the day (left ear) ----------
+     Quotes are written in the Back Office and kept in settings.json as [{text, by}]. Each Bangalore day shows the next
+     one in the list, so every visitor sees the same quote that day. The date is re-checked each minute for midnight. */
+  var TZ = 'Asia/Kolkata', QUOTES = [], dayShown = '';
+  function bangaloreDay() { return new Date().toLocaleDateString('en-CA', { timeZone: TZ }); } /* YYYY-MM-DD */
+  function renderQuote() {
+    var list = QUOTES.filter(function (q) { return q && String(q.text || '').trim(); });
+    var ear = $('quoteEar'), box = $('qotd');
+    ear.classList.toggle('empty', !list.length);
+    if (!list.length) { box.innerHTML = ''; return; }
+    var d = bangaloreDay().split('-'), n = Math.floor(Date.UTC(+d[0], +d[1] - 1, +d[2]) / 864e5);
+    var q = list[n % list.length];
+    box.innerHTML = '“' + esc(String(q.text).trim()) + '”' + (q.by ? '<footer>— ' + esc(q.by) + '</footer>' : '');
   }
-  function startClock() {
-    var ticks = '';
-    for (var i = 0; i < 60; i += 5) {
-      var a = i * 6 * Math.PI / 180, q = i % 15 === 0, r1 = q ? 35 : 38;
-      ticks += '<line' + (q ? ' class="q"' : '') + ' x1="' + (50 + r1 * Math.sin(a)).toFixed(2) + '" y1="' + (50 - r1 * Math.cos(a)).toFixed(2) +
-        '" x2="' + (50 + 42 * Math.sin(a)).toFixed(2) + '" y2="' + (50 - 42 * Math.cos(a)).toFixed(2) + '"/>';
-    }
-    $('clockTicks').innerHTML = ticks;
-    var h = $('hHand'), m = $('mHand'), s = $('sHand'), lbl = $('clockLbl'), lastMin = -1;
-    function draw() {
-      var now = new Date(), z = zoned(now), sec = z.second + (reduced ? 0 : now.getMilliseconds() / 1000);
-      var min = z.minute + sec / 60, hr = (z.hour % 12) + min / 60;
-      h.setAttribute('transform', 'rotate(' + (hr * 30).toFixed(2) + ' 50 50)');
-      m.setAttribute('transform', 'rotate(' + (min * 6).toFixed(2) + ' 50 50)');
-      s.setAttribute('transform', 'rotate(' + (sec * 6).toFixed(2) + ' 50 50)');
-      if (z.minute !== lastMin) {
-        if (lastMin !== -1 && z.hour === 0 && z.minute === 0) renderDateline(); /* roll over at midnight */
-        lastMin = z.minute;
-        lbl.textContent = now.toLocaleTimeString('en-GB', { timeZone: TZ, hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase() + ' IST';
-      }
-    }
-    draw();
-    if (reduced) setInterval(draw, 1000);
-    else (function loop() { draw(); requestAnimationFrame(loop); })();
+  function watchDay() {
+    dayShown = bangaloreDay();
+    setInterval(function () {
+      var today = bangaloreDay();
+      if (today !== dayShown) { dayShown = today; renderQuote(); renderDateline(); }
+    }, 60000);
   }
 
   /* The dateline is today's date in Bangalore for the current edition; a back issue says so, with its own date. */
@@ -622,7 +610,7 @@
     D.entries.forEach(function (e, i) { if (!e.id) e.id = 'e' + i; });
     editions = D.entries.slice().sort(function (a, b) { return String(b.date).localeCompare(a.date); });
     renderChrome(); renderLead(); renderInside(); renderLetters(); renderBelow();
-    startClock(); renderLastUpdated();
+    renderQuote(); watchDay(); renderLastUpdated();
     wire(); setupScroll(); route(); restartLetters(); setupExtra();
     loadPosts().then(function () {
       renderStrip(); renderLastUpdated();
@@ -639,7 +627,7 @@
     /* settings.json (written from the Back Office hub) lists sections hidden from the paper; missing = nothing hidden */
     var settings = fetch('settings.json?v=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
-      .then(function (s) { HIDDEN = (s && Array.isArray(s.hidden)) ? s.hidden : []; });
+      .then(function (s) { HIDDEN = (s && Array.isArray(s.hidden)) ? s.hidden : []; QUOTES = (s && Array.isArray(s.quotes)) ? s.quotes : []; });
     var content = fetch('content.json?v=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     Promise.all([content, settings]).then(function (x) { boot(x[0]); })
