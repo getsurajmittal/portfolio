@@ -74,6 +74,7 @@ img{max-width:100%;display:block}
 .ruled{border-bottom:1px solid var(--ink);padding-bottom:5px;margin-bottom:4px}
 .note{margin:8px 0 6px;font:italic 13px var(--old);color:var(--sub)}
 .just{text-align:justify;hyphens:auto}
+.side .just{text-align:left;hyphens:manual} /* the sidebar is too narrow to justify without wide gaps */
 .kicker{font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
 .byline{font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
 .deck{margin:0 0 10px;font:italic 400 22px/1.3 var(--old)}

@@ -66,6 +66,19 @@
   }
   /* The ticker carries career and certification news only; posts have their own strip below the fold. */
   var TICKER_TYPES = ['role', 'certification', 'course', 'honour'];
+  /* one plain sentence for a story filed without any body text */
+  function summary(e) {
+    var n = D.site.name, when = fmt(e.date, { month: 'long', year: 'numeric' }), at = e.org ? ' ' + e.org : '';
+    switch (e.type) {
+      case 'role': return n + (e.endDate ? ' worked at' + at + ' as ' + e.title + ' from ' + when + ' to ' + fmt(e.endDate, { month: 'long', year: 'numeric' }) : ' joined' + at + ' as ' + e.title + ' in ' + when) + '.';
+      case 'certification': return n + ' earned the ' + e.title + ' certification' + (e.org ? ' from ' + e.org : '') + ' in ' + when + '.';
+      case 'course': return n + ' completed ' + e.title + (e.org ? ' with ' + e.org : '') + ' in ' + when + '.';
+      case 'education': return n + ' completed ' + e.title + (e.org ? ' at ' + e.org : '') + (e.endDate ? ' in ' + fmt(e.endDate, { month: 'long', year: 'numeric' }) : '') + '.';
+      case 'project': return e.title + ' went live in ' + when + '.';
+      case 'honour': return n + ' received ' + e.title + (e.org ? ' from ' + e.org : '') + ' in ' + when + '.';
+      default: return e.deck || e.title;
+    }
+  }
   function tickerLine(e) {
     var n = D.site.name;
     switch (e.type) {
@@ -128,13 +141,17 @@
     $('older').disabled = edIdx >= editions.length - 1;
     $('newer').disabled = edIdx === 0;
 
-    var ps = paras(e.body);
-    if (!ps.length) ps = [e.deck || e.title];
+    var written = paras(e.body), ps = written.length ? written : [summary(e)];
     var first = ps[0];
-    var body = '<p><span class="city">' + esc(D.site.city.toUpperCase()) + ' — </span><span class="dropcap">' + esc(first.charAt(0)) + '</span>' + esc(first.slice(1)) + '</p>' +
+    /* dateline as a small-caps lead-in, then the paragraph (no drop cap: it floated left of the dateline) */
+    var body = '<p><span class="city">' + esc((e.location || D.site.city || '').toUpperCase()) + ' — </span>' + esc(first) + '</p>' +
       ps.slice(1, 3).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
-    var target = e.type === 'column' ? '#A3/' + e.id : '#A2/' + e.id;
-    body += '<p style="text-indent:0"><a class="lnk it" style="padding:0" href="' + target + '">Full story continued on page ' + (e.type === 'column' ? 'A3' : 'A2') + ' ▸</a></p>';
+    /* only promise a continuation when there is more to read */
+    var more = e.type === 'column' ? written.length > 0 : (written.length > 3 || e.type === 'project' || e.featured);
+    if (more) {
+      var target = e.type === 'column' ? '#A3/' + e.id : '#A2/' + e.id;
+      body += '<p style="text-indent:0"><a class="lnk it" style="padding:0" href="' + target + '">Full story continued on page ' + (e.type === 'column' ? 'A3' : 'A2') + ' ▸</a></p>';
+    }
 
     $('lead').innerHTML =
       '<div class="kicker">' + esc(KICKER[e.type] || 'News') + (edIdx ? ' · Back issue' : '') + '</div>' +
