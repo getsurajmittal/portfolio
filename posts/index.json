@@ -9,6 +9,151 @@
       "excerpt": "Seems like people have hard time at making friends, well I have a hard time at keeping them. Returned to home town after a long time only to find out that a cou",
       "tags": [],
       "minutes": 1
+    },
+    {
+      "slug": "notes-on-tool-calls",
+      "section": "tech",
+      "title": "Notes on tool calls in an AI SDK",
+      "date": "2026-11-07",
+      "updated": "2026-11-07",
+      "excerpt": "Tool calls looked like magic until I logged the raw requests. Then it was just a loop with good manners.",
+      "tags": [
+        "AI"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "learning-the-harmonica",
+      "section": "life",
+      "title": "I recently learned to play the harmonica",
+      "date": "2026-11-06",
+      "updated": "2026-11-06",
+      "excerpt": "Three weeks, one blues scale and very patient neighbours.",
+      "tags": [
+        "Music"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "certificates-expire-on-weekends",
+      "section": "tech",
+      "title": "Certificates always seem to expire on weekends",
+      "date": "2026-11-04",
+      "updated": "2026-11-04",
+      "excerpt": "An expired certificate is a calendar problem dressed up as a security one. Three habits that keep it boring.",
+      "tags": [
+        "Security",
+        "Infrastructure"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "reading-firewall-rules-top-to-bottom",
+      "section": "tech",
+      "title": "Reading a firewall rule set from top to bottom",
+      "date": "2026-10-29",
+      "updated": "2026-10-29",
+      "excerpt": "Rules are read in order, which means the order is the policy. What I look for when I read one end to end.",
+      "tags": [
+        "Security"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "sunday-mornings-in-cubbon-park",
+      "section": "life",
+      "title": "Sunday mornings in Cubbon Park",
+      "date": "2026-10-26",
+      "updated": "2026-10-26",
+      "excerpt": "The same loop every week, and it is never quite the same walk.",
+      "tags": [
+        "Bangalore"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "least-privilege-is-a-habit",
+      "section": "tech",
+      "title": "Least privilege is a habit, not a setting",
+      "date": "2026-10-21",
+      "updated": "2026-10-21",
+      "excerpt": "Nobody grants too much access on purpose. It happens one reasonable request at a time.",
+      "tags": [
+        "Security"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "learning-to-cook-a-proper-dal",
+      "section": "life",
+      "title": "Learning to cook a proper dal",
+      "date": "2026-10-18",
+      "updated": "2026-10-18",
+      "excerpt": "Turns out the secret is the tadka, patience, and not touching it.",
+      "tags": [
+        "Food"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "five-questions-before-approving-infra-changes",
+      "section": "tech",
+      "title": "Five questions before I approve an infrastructure change",
+      "date": "2026-10-13",
+      "updated": "2026-10-13",
+      "excerpt": "A short checklist I now run through before approving anything that routes traffic or touches access.",
+      "tags": [
+        "Infrastructure"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "no-phone-after-nine",
+      "section": "life",
+      "title": "No phone after 9 p.m.: one week in",
+      "date": "2026-10-10",
+      "updated": "2026-10-10",
+      "excerpt": "An experiment in boredom. I read more, slept better, and missed nothing that mattered.",
+      "tags": [
+        "Habits"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "the-last-of-the-rain",
+      "section": "life",
+      "title": "The last of the rain",
+      "date": "2026-10-03",
+      "updated": "2026-10-03",
+      "excerpt": "Filter coffee, a balcony and the last few evenings of the monsoon.",
+      "tags": [
+        "Everyday"
+      ],
+      "minutes": 1,
+      "sample": true
+    },
+    {
+      "slug": "logs-for-the-person-at-2am",
+      "section": "tech",
+      "title": "Write logs for the person reading them at 2 a.m.",
+      "date": "2026-10-02",
+      "updated": "2026-10-02",
+      "excerpt": "A good log line answers what happened, to what, and what to do next, for someone tired and in a hurry.",
+      "tags": [
+        "Infrastructure"
+      ],
+      "minutes": 1,
+      "sample": true
     }
-  ]
+  ],
+  "updatedAt": "2026-11-08T06:34:00.000Z"
 }

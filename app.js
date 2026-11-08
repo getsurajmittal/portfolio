@@ -115,7 +115,6 @@
     document.querySelectorAll('[data-brand]').forEach(function (el) { el.textContent = brand; });
     document.title = brand + ' — ' + s.name;
     if (s.accent) document.documentElement.style.setProperty('--red', s.accent);
-    $('onDesk').innerHTML = 'Studying ' + esc(s.onDesk && s.onDesk.studying) + '.<br>Reading ' + esc(s.onDesk && s.onDesk.reading) + '.';
     var first = editions.length ? year(editions[editions.length - 1].date) : new Date().getFullYear();
     $('vol').textContent = String(new Date().getFullYear() - (+first) + 1);
     $('profile').textContent = s.profile || '';
@@ -134,8 +133,52 @@
     $('contact').innerHTML = '<span class="links">Correspondence: ' + links.join(' · ') + '</span><span>© ' + new Date().getFullYear() + ' ' + esc(s.name) + ' · Printed in ' + esc(s.city) + ' · <a class="staff" href="office/">Staff entrance</a></span>';
   }
 
-  function tickClock() {
-    $('clock').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  /* ---------- analog clock: Bangalore time, second hand sweeps (ticks once a second with reduced motion) ---------- */
+  var TZ = 'Asia/Kolkata';
+  function zoned(d) { /* the wall-clock parts of d in Bangalore, whatever the visitor's own time zone */
+    var p = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hour: 'numeric', minute: 'numeric', second: 'numeric', hourCycle: 'h23' })
+      .formatToParts(d).forEach(function (x) { p[x.type] = +x.value; });
+    return p;
+  }
+  function startClock() {
+    var ticks = '';
+    for (var i = 0; i < 60; i += 5) {
+      var a = i * 6 * Math.PI / 180, q = i % 15 === 0, r1 = q ? 35 : 38;
+      ticks += '<line' + (q ? ' class="q"' : '') + ' x1="' + (50 + r1 * Math.sin(a)).toFixed(2) + '" y1="' + (50 - r1 * Math.cos(a)).toFixed(2) +
+        '" x2="' + (50 + 42 * Math.sin(a)).toFixed(2) + '" y2="' + (50 - 42 * Math.cos(a)).toFixed(2) + '"/>';
+    }
+    $('clockTicks').innerHTML = ticks;
+    var h = $('hHand'), m = $('mHand'), s = $('sHand'), lbl = $('clockLbl'), lastMin = -1;
+    function draw() {
+      var now = new Date(), z = zoned(now), sec = z.second + (reduced ? 0 : now.getMilliseconds() / 1000);
+      var min = z.minute + sec / 60, hr = (z.hour % 12) + min / 60;
+      h.setAttribute('transform', 'rotate(' + (hr * 30).toFixed(2) + ' 50 50)');
+      m.setAttribute('transform', 'rotate(' + (min * 6).toFixed(2) + ' 50 50)');
+      s.setAttribute('transform', 'rotate(' + (sec * 6).toFixed(2) + ' 50 50)');
+      if (z.minute !== lastMin) {
+        lastMin = z.minute;
+        lbl.textContent = now.toLocaleTimeString('en-GB', { timeZone: TZ, hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase() + ' IST';
+      }
+    }
+    draw();
+    if (reduced) setInterval(draw, 1000);
+    else (function loop() { draw(); requestAnimationFrame(loop); })();
+  }
+
+  /* ---------- "Last updated": the newest publish we know of ----------
+     The Desk stamps content.json (site.updatedAt) and the Notebook stamps posts/index.json (updatedAt) with a
+     full time on every publish. Older files only have dates, so fall back to the newest entry or post date. */
+  var postsUpdatedAt = null;
+  function renderLastUpdated() {
+    var stamps = [D.site.updatedAt, postsUpdatedAt].filter(function (x) { return x && !isNaN(Date.parse(x)); }).sort();
+    var days = D.entries.map(function (e) { return e.date; }).concat(POSTS.map(function (p) { return p.updated || p.date; }))
+      .filter(Boolean).sort();
+    var stamp = stamps[stamps.length - 1], day = days[days.length - 1];
+    var el = $('lastUpdated');
+    if (stamp && (!day || stamp.slice(0, 10) >= day)) {
+      el.textContent = new Date(stamp).toLocaleString('en-GB', { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true }) + ' IST';
+    } else el.textContent = day ? fmt(day, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : '—';
   }
 
   /* ---------- A1 front page ---------- */
@@ -282,6 +325,7 @@
     return fetch('posts/index.json?v=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : { posts: [] }; })
       .then(function (j) {
+        postsUpdatedAt = j && j.updatedAt || null;
         POSTS = ((j && j.posts) || []).filter(function (p) { return p && p.title && SLUG.test(String(p.slug)); })
           .sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
       })
@@ -566,10 +610,10 @@
     D.entries.forEach(function (e, i) { if (!e.id) e.id = 'e' + i; });
     editions = D.entries.slice().sort(function (a, b) { return String(b.date).localeCompare(a.date); });
     renderChrome(); renderLead(); renderInside(); renderLetters(); renderBelow();
-    tickClock(); setInterval(tickClock, 15000);
+    startClock(); renderLastUpdated();
     wire(); setupScroll(); route(); restartLetters(); setupExtra();
     loadPosts().then(function () {
-      renderStrip();
+      renderStrip(); renderLastUpdated();
       if (/^#A3/.test(location.hash)) renderOpinion((location.hash.split('/')[1] && decodeURIComponent(location.hash.split('/')[1])) || null);
     });
     var rs = null;

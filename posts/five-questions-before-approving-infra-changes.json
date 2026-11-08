@@ -1,0 +1,14 @@
+{
+  "slug": "five-questions-before-approving-infra-changes",
+  "section": "tech",
+  "title": "Five questions before I approve an infrastructure change",
+  "date": "2026-10-13",
+  "updated": "2026-10-13",
+  "excerpt": "A short checklist I now run through before approving anything that routes traffic or touches access.",
+  "tags": [
+    "Infrastructure"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "Before I approve a change to anything that routes traffic or touches access, I ask five questions:\n\n1. **What does this change for a user if it goes wrong?**\n2. **How will we know it went wrong?** A metric, an alert, or someone shouting?\n3. **How do we undo it, and how long does that take?**\n4. **What else depends on the thing being changed?**\n5. **Why now?** Is there a reason this can't wait for a quieter day?\n\nMost changes pass in a minute. The ones that don't are exactly the ones worth the extra five."
+}

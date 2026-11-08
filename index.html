@@ -23,14 +23,21 @@
 
 <div class="wrap paper" id="paper">
   <header class="masthead-row" id="mastheadRow">
-    <div class="ear">
-      <div class="ear-h">On the desk</div>
-      <div id="onDesk"></div>
+    <div class="ear ear-clock">
+      <svg class="clock" viewBox="0 0 100 100" role="img" aria-labelledby="clockLbl">
+        <circle cx="50" cy="50" r="46" class="clock-face"/>
+        <g class="clock-ticks" id="clockTicks"></g>
+        <line id="hHand" class="hand hand-h" x1="50" y1="56" x2="50" y2="27"/>
+        <line id="mHand" class="hand hand-m" x1="50" y1="58" x2="50" y2="15"/>
+        <line id="sHand" class="hand hand-s" x1="50" y1="62" x2="50" y2="11"/>
+        <circle cx="50" cy="50" r="3" class="clock-pin"/>
+      </svg>
+      <div class="clock-cap"><div class="ear-h">Bangalore time</div><span id="clockLbl"></span></div>
     </div>
     <h1 class="masthead" data-brand>The Gazette</h1>
     <div class="ear ear-r">
       <div class="ear-h">Late edition</div>
-      Printed <span id="clock"></span><br>Updated with every new record
+      Last updated<br><span id="lastUpdated">—</span>
     </div>
   </header>
   <div class="motto">“All the work that's fit to print”</div>

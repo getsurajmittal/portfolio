@@ -1,0 +1,14 @@
+{
+  "slug": "logs-for-the-person-at-2am",
+  "section": "tech",
+  "title": "Write logs for the person reading them at 2 a.m.",
+  "date": "2026-10-02",
+  "updated": "2026-10-02",
+  "excerpt": "A good log line answers what happened, to what, and what to do next, for someone tired and in a hurry.",
+  "tags": [
+    "Infrastructure"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "Every log line is a note to a stranger: usually a tired one, reading at 2 a.m., in a hurry.\n\nA good line answers three questions:\n\n- **What happened?** \"Connection refused\", not \"Error occurred\".\n- **To what?** The host, the request ID, the user or job affected.\n- **What next?** Whether it will be retried, or what the reader should check.\n\nAnd the opposite: if a line fires a thousand times a minute and nobody reads it, it isn't a log, it's noise. Delete it, or make it count."
+}

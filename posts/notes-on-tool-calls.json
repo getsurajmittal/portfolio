@@ -1,0 +1,14 @@
+{
+  "slug": "notes-on-tool-calls",
+  "section": "tech",
+  "title": "Notes on tool calls in an AI SDK",
+  "date": "2026-11-07",
+  "updated": "2026-11-07",
+  "excerpt": "Tool calls looked like magic until I logged the raw requests. Then it was just a loop with good manners.",
+  "tags": [
+    "AI"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "I've been studying AI SDKs, and tool calls were the part that felt like magic. Then I logged the raw requests, and it became a loop with good manners.\n\n## What actually happens\n\n1. The model gets your message and a list of tools, each with a name, a description and an input schema.\n2. If it decides a tool would help, it replies with a tool call instead of text.\n3. Your code runs the tool and sends the result back as its own message.\n4. The model reads the result and either answers or calls another tool.\n\n## What I'd set up on day one\n\n- **Log every request and response** while learning. Most of my confusion disappeared once I could see the messages.\n- **Write tool descriptions for a reader**, not a parser. The model chooses tools from those words.\n- **Return errors as results.** A clear \"file not found\" lets the model recover. A crash ends the conversation."
+}

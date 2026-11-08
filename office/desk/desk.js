@@ -25,6 +25,7 @@
   function publish() {
     var btn = $('publishBtn'); btn.disabled = true; status('Sending to the presses…');
     var msg = 'Edition: ' + (changes.length ? changes.slice(-3).join('; ') : 'updates') + ' (' + today() + ')';
+    D.site = D.site || {}; D.site.updatedAt = new Date().toISOString(); /* the paper shows this as "Last updated" */
     gh.putJSON(REPO, 'content.json', D, sha, msg).then(function (j) {
       sha = j.content.sha; dirty = false; changes = [];
       status('Published. The paper updates in about a minute.');
@@ -174,7 +175,6 @@
     { set: 'Masthead' },
     ['site.name', 'Full name'], ['site.surname', 'Name on the masthead', 'Shown as “The ___ Gazette”'], ['site.city', 'City'],
     ['site.role', 'Current role'], ['site.field', 'Your field'],
-    ['site.onDesk.studying', 'On the desk: studying'], ['site.onDesk.reading', 'On the desk: reading'],
     ['site.profile', 'Profile paragraph (front page)', '', 'area'],
     ['site.accent', 'Accent colour', '', 'color'],
     { set: 'Résumé' },

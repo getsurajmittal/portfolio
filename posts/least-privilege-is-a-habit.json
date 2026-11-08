@@ -1,0 +1,14 @@
+{
+  "slug": "least-privilege-is-a-habit",
+  "section": "tech",
+  "title": "Least privilege is a habit, not a setting",
+  "date": "2026-10-21",
+  "updated": "2026-10-21",
+  "excerpt": "Nobody grants too much access on purpose. It happens one reasonable request at a time.",
+  "tags": [
+    "Security"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "Nobody hands out too much access on purpose. It happens one reasonable request at a time: a deadline, a quick fix, an \"I'll tighten it later\".\n\nA few habits that help:\n\n- **Start from nothing and add.** Removing access later always feels riskier than never granting it.\n- **Give access an expiry.** Access that ends unless renewed stays small without anyone having to remember.\n- **Review by asking \"what breaks if we remove this?\"** If nobody knows, that's the answer to a different question.\n\nLeast privilege isn't a checkbox in a console. It's a small decision you make every week."
+}

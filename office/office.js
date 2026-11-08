@@ -415,6 +415,13 @@
   function slugify(s) {
     return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60).replace(/-+$/, '');
   }
+  /* shorten at a word boundary, with an ellipsis, so excerpts never end mid-word */
+  function clip(s, n) {
+    s = String(s || '').replace(/\s+/g, ' ').trim();
+    if (s.length <= n) return s;
+    var cut = s.slice(0, n), sp = cut.lastIndexOf(' ');
+    return (sp > n * 0.6 ? cut.slice(0, sp) : cut).replace(/[\s.,;:!?-]+$/, '') + '…';
+  }
   function pubSection() { var r = document.querySelector('input[name="pubSec"]:checked'); return r ? r.value : 'tech'; }
   function pubIncluded() {
     return [].slice.call(document.querySelectorAll('#pubEntries input')).filter(function (c) { return c.checked; }).map(function (c) { return +c.value; });
@@ -429,7 +436,7 @@
     $('pubSlug').readOnly = !!post.slug;
     $('pubSlugHint').textContent = post.slug ? 'fixed once published, so shared links keep working' : 'made from the headline; you can change it now';
     $('pubTags').value = post.tags ? post.tags.join(', ') : (p.tags || []).join(', ');
-    $('pubEx').value = post.excerpt != null ? post.excerpt : firstText(p).slice(0, 160);
+    $('pubEx').value = post.excerpt != null ? post.excerpt : clip(firstText(p), 160);
     var inc = post.include;
     $('pubEntries').innerHTML = (p.entries || []).map(function (e, i) {
       if (!textOf(e)) return '';
@@ -475,6 +482,7 @@
       return getIndex().then(function (r) {
         r.data.posts = fn(r.data.posts.slice());
         r.data.posts.sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+        r.data.updatedAt = new Date().toISOString(); /* the paper shows this as "Last updated" */
         return gh.putJSON(cfg.siteRepo, 'posts/index.json', r.data, r.sha, message);
       }).catch(function (e) { if ((e.status === 409 || e.status === 422) && !retry) return go(true); throw e; });
     };

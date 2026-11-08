@@ -1,0 +1,14 @@
+{
+  "slug": "reading-firewall-rules-top-to-bottom",
+  "section": "tech",
+  "title": "Reading a firewall rule set from top to bottom",
+  "date": "2026-10-29",
+  "updated": "2026-10-29",
+  "excerpt": "Rules are read in order, which means the order is the policy. What I look for when I read one end to end.",
+  "tags": [
+    "Security"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "Firewall rules are evaluated in order, so the order *is* the policy. Reading a rule set from top to bottom, slowly, is one of the most useful afternoons I know.\n\nWhat I look for:\n\n- **Shadowed rules:** a broad rule above a narrow one means the narrow one never fires.\n- **\"Temporary\" exceptions:** if a rule has a ticket number and no expiry, it's permanent now.\n- **Any-to-any:** every `any` deserves a sentence explaining why.\n- **Missing comments:** a rule nobody can explain is a rule nobody dares remove.\n\nRule sets grow by addition and almost never by subtraction. Reading them end to end is how they shrink."
+}

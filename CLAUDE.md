@@ -45,7 +45,7 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
 
 - Two sections: `section: "tech"` → **From The Column** (red) and `section: "life"` → **Life & Times** (green, `--life`). A missing section counts as tech.
 - Public files in the website repo: `posts/index.json` = `{"posts":[{slug, section, title, date, updated, excerpt, tags[], minutes}]}` and `posts/<slug>.json` = the same fields plus `body` (Markdown). `slug` must match `^[a-z0-9][a-z0-9-]{0,80}$`. `life` and `tech` are reserved (they are A3 anchors). A missing index means there are no posts.
-- Only **published** posts belong in these files. Design doc: https://claude.ai/artifact/JFXQ6znkAPFRzzU3WXbf8p
+- Only **published** posts belong in these files. Posts marked `"sample": true` are placeholders added to fill the strips; they have no notebook page behind them, so remove them by deleting their file and their index entry. Design doc: https://claude.ai/artifact/JFXQ6znkAPFRzzU3WXbf8p
 - `app.js`: `loadPosts` runs after boot. `renderStrip` draws two strips below the fold on A1 (`#strip-tech`, `#strip-life`; the life strip drifts the other way). A strip only drifts when its cards overflow it, and pauses on hover, focus or its `.strip-pause` button. A3 lists tech posts (plus legacy `column` entries), then Life & Times. `#A3/life` and `#A3/tech` scroll to a section, and `#A3/<slug>` renders one post (`renderPost`).
 - `md()` / `inlineMd()` render a small Markdown subset after escaping everything: paragraphs, `##`/`###`, lists, `>` quotes, fenced and inline code, bold, italic, links and images (URLs go through `safeUrl`). Never let raw HTML through.
 - Posts are **not** editions: they don't lead A1, don't appear in the ticker and don't appear in the Morgue.
@@ -67,7 +67,8 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
   - A2: projects and `featured` entries as case studies.
   - A3: columns and corrections.
   - B1: scoreboard counts, honours, and "The Morgue" (every edition, grouped by year).
-- The LATEST ticker shows only career and certification news: `TICKER_TYPES` = role, certification, course, honour. It shows the 6 newest, in sentence case (`tickerLine`), and hides itself when there are none.
+- Masthead ears: the left one is an analog clock showing Bangalore time (`startClock`, sweeping second hand, ticks once a second with reduced motion). The right one shows "Last updated" (`renderLastUpdated`): the newest of `content.json` `site.updatedAt` (stamped by the Desk on publish) and `posts/index.json` `updatedAt` (stamped by the Notebook on publish/unpublish), falling back to the newest entry or post date.
+- The LATEST ticker scrolls at a steady ~60 px/s (`fitTicker` repeats short news to fill the bar). It shows only career and certification news: `TICKER_TYPES` = role, certification, course, honour. It shows the 6 newest, in sentence case (`tickerLine`), and hides itself when there are none.
 - Certifications from the last 45 days get a NEW stamp. There's also a night theme toggle.
 
 ## Résumé (resume.js)

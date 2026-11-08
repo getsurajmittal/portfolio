@@ -1,0 +1,15 @@
+{
+  "slug": "certificates-expire-on-weekends",
+  "section": "tech",
+  "title": "Certificates always seem to expire on weekends",
+  "date": "2026-11-04",
+  "updated": "2026-11-04",
+  "excerpt": "An expired certificate is a calendar problem dressed up as a security one. Three habits that keep it boring.",
+  "tags": [
+    "Security",
+    "Infrastructure"
+  ],
+  "minutes": 1,
+  "sample": true,
+  "body": "An expired TLS certificate is a calendar problem dressed up as a security problem. Nothing is broken until, suddenly, everything is.\n\nThree habits I now treat as non-negotiable:\n\n- **Automate renewal, then monitor the automation.** A renewal job that fails silently is worse than no job, because everyone believes it works.\n- **Alert on days remaining, not on failure.** Thirty days of warning is a ticket. Zero days is an incident.\n- **Keep an inventory.** If you can't list every certificate you own and where it lives, you'll find out about one from an angry user.\n\nNone of this is clever. That's the point: the goal is for renewal to be boring."
+}

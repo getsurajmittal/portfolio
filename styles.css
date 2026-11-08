@@ -51,6 +51,19 @@ img{max-width:100%;display:block}
 .masthead-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
 .ear{flex:1 1 180px;border:1px solid var(--ink);padding:8px 10px;font:600 11px/1.45 var(--sans);text-transform:uppercase;letter-spacing:.04em}
 .ear-r{text-align:right}
+/* analog clock (left ear) */
+.ear-clock{display:flex;align-items:center;gap:12px}
+.clock{width:76px;height:76px;flex:none;overflow:visible}
+.clock-face{fill:none;stroke:var(--ink);stroke-width:2.2}
+.clock-ticks line{stroke:var(--ink);stroke-width:1.2;stroke-linecap:round}
+.clock-ticks line.q{stroke-width:2.6}
+.hand{stroke:var(--ink);stroke-linecap:round}
+.hand-h{stroke-width:4.2}
+.hand-m{stroke-width:2.6}
+.hand-s{stroke:var(--red);stroke-width:1.2}
+.clock-pin{fill:var(--red)}
+.clock-cap{min-width:0}
+#clockLbl,#lastUpdated{font-variant-numeric:tabular-nums}
 .ear-h{font-weight:800;border-bottom:1px solid var(--ink);padding-bottom:3px;margin-bottom:4px}
 .masthead{flex:999 1 520px;margin:0;text-align:center;font:900 clamp(44px,7.4vw,92px)/1 var(--black);letter-spacing:-.02em}
 .motto{text-align:center;font:italic 14px var(--old);margin:6px 0 8px}
@@ -158,7 +171,7 @@ img{max-width:100%;display:block}
 .post-card{width:280px;flex:none;padding:4px 18px;border-right:1px solid var(--rule);text-decoration:none;display:flex;flex-direction:column;gap:5px}
 .post-card:hover h4{text-decoration:underline;text-underline-offset:3px}
 .post-card h4{margin:0;font:700 19px/1.15 var(--old);text-wrap:balance}
-.post-card p{margin:0;font-size:14px;line-height:1.45;color:var(--sub)}
+.post-card p{margin:0;font-size:14px;line-height:1.45;color:var(--sub);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .post-card .tags{font:600 11px var(--sans);color:var(--red);letter-spacing:.04em}
 /* a post on A3 */
 .post-body{max-width:68ch;font-size:16.5px;line-height:1.65}
