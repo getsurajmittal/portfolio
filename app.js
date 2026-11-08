@@ -94,6 +94,20 @@
     return d && (Date.now() - d.getTime()) < 45 * 864e5;
   }
 
+  /* The ticker scrolls at a steady speed however much news there is: short news is repeated until one
+     loop is at least as wide as the bar, and the loop's duration follows its width. */
+  var tickerItems = '', TICKER_SPEED = 60; /* pixels per second */
+  function fitTicker() {
+    var run = $('tickerRun'), win = run.parentNode;
+    if (!tickerItems) { run.innerHTML = ''; return; }
+    run.innerHTML = '<span class="half">' + tickerItems + '</span>';
+    var one = run.firstChild.offsetWidth, reps = 1;
+    while (one > 0 && one * reps < win.clientWidth && reps < 12) reps++;
+    var loop = new Array(reps + 1).join(tickerItems);
+    run.innerHTML = '<span class="half">' + loop + '</span><span class="half" aria-hidden="true">' + loop + '</span>';
+    run.style.animationDuration = Math.max(8, Math.round(run.firstChild.offsetWidth / TICKER_SPEED)) + 's';
+  }
+
   /* ---------- masthead, dateline, ticker ---------- */
   function renderChrome() {
     var s = D.site;
@@ -108,8 +122,8 @@
 
     var news = editions.filter(function (e) { return TICKER_TYPES.indexOf(e.type) > -1; });
     document.querySelector('.ticker').hidden = !news.length;
-    var items = news.slice(0, 6).map(function (e) { return '<span>' + esc(tickerLine(e)) + '</span><span aria-hidden="true">◆</span>'; }).join('');
-    $('tickerRun').innerHTML = '<span class="half">' + items + '</span><span class="half" aria-hidden="true">' + items + '</span>';
+    tickerItems = news.slice(0, 6).map(function (e) { return '<span>' + esc(tickerLine(e)) + '</span><span aria-hidden="true">◆</span>'; }).join('');
+    fitTicker();
 
     var c = s.contact || {};
     var links = [];
@@ -559,7 +573,8 @@
       if (/^#A3/.test(location.hash)) renderOpinion((location.hash.split('/')[1] && decodeURIComponent(location.hash.split('/')[1])) || null);
     });
     var rs = null;
-    window.addEventListener('resize', function () { clearTimeout(rs); rs = setTimeout(renderStrip, 250); });
+    window.addEventListener('resize', function () { clearTimeout(rs); rs = setTimeout(function () { renderStrip(); fitTicker(); }, 250); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTicker); /* re-measure once the italic face has loaded */
   }
 
   function load() {
