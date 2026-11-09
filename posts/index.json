@@ -1,22 +1,22 @@
 {
   "posts": [
     {
-      "slug": "unfortunate-in-friendships",
-      "section": "life",
-      "title": "Unfortunate in friendships!",
-      "date": "2026-11-08",
-      "updated": "2026-11-08",
-      "excerpt": "Seems like people have hard time at making friends, well I have a hard time at keeping them. Returned to home town after a long time only to find out that a cou",
-      "tags": [],
-      "minutes": 1
-    },
-    {
       "slug": "how-to-fall-in-love-with-your-life-again",
       "section": "life",
       "title": "How to fall in love with your life AGAIN?",
       "date": "2026-11-08",
       "updated": "2026-11-08",
       "excerpt": "- stop expecting from everyone - stop taking things personally - don't beg for love or attention - keep emotions under control - disconnect for a while - let…",
+      "tags": [],
+      "minutes": 1
+    },
+    {
+      "slug": "unfortunate-in-friendships",
+      "section": "life",
+      "title": "Unfortunate in friendships!",
+      "date": "2026-11-08",
+      "updated": "2026-11-09",
+      "excerpt": "Seems like people have hard time at making friends, well I have a hard time at keeping them. Returned to home town after a long time only to find out that a cou",
       "tags": [],
       "minutes": 1
     },
@@ -152,5 +152,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-08T17:43:58.878Z"
+  "updatedAt": "2026-11-09T09:11:53.980Z"
 }
