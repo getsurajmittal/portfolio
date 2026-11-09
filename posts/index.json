@@ -1,6 +1,16 @@
 {
   "posts": [
     {
+      "slug": "in-for-some-brutally-honest-advice",
+      "section": "life",
+      "title": "In for some brutally honest advice?",
+      "date": "2026-11-09",
+      "updated": "2026-11-09",
+      "excerpt": "- Become successful while your parents are alive. - A man who fears pain more than failure will taste both.",
+      "tags": [],
+      "minutes": 1
+    },
+    {
       "slug": "how-to-fall-in-love-with-your-life-again",
       "section": "life",
       "title": "How to fall in love with your life AGAIN?",
@@ -152,5 +162,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-09T09:11:53.980Z"
+  "updatedAt": "2026-11-09T15:39:53.259Z"
 }
