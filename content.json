@@ -20,7 +20,7 @@
       "website": ""
     },
     "accent": "#B3001B",
-    "updatedAt": "2026-11-09T09:05:48.030Z"
+    "updatedAt": "2026-11-09T09:06:10.695Z"
   },
   "entries": [
     {
@@ -180,6 +180,6 @@
     }
   ],
   "corrections": [
-    "Only way to be better as system design is reading outage stories."
+    "Only way to be better at system design is reading outage stories."
   ]
 }
