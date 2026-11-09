@@ -11,6 +11,16 @@
       "minutes": 1
     },
     {
+      "slug": "some-shayari",
+      "section": "life",
+      "title": "Some shayari?",
+      "date": "2026-11-09",
+      "updated": "2026-11-09",
+      "excerpt": "Welcome. I have a hobby of reading and writing shayaris, some of these might be originals while others the best of some I liked.",
+      "tags": [],
+      "minutes": 1
+    },
+    {
       "slug": "how-to-fall-in-love-with-your-life-again",
       "section": "life",
       "title": "How to fall in love with your life AGAIN?",
@@ -162,5 +172,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-09T15:39:53.259Z"
+  "updatedAt": "2026-11-09T16:29:47.757Z"
 }
