@@ -1,22 +1,22 @@
 {
   "posts": [
     {
-      "slug": "in-for-some-brutally-honest-advice",
-      "section": "life",
-      "title": "In for some brutally honest advice?",
-      "date": "2026-11-09",
-      "updated": "2026-11-09",
-      "excerpt": "- Become successful while your parents are alive. - A man who fears pain more than failure will taste both.",
-      "tags": [],
-      "minutes": 1
-    },
-    {
       "slug": "some-shayari",
       "section": "life",
       "title": "Some shayari?",
       "date": "2026-11-09",
       "updated": "2026-11-09",
       "excerpt": "Welcome. I have a hobby of reading and writing shayaris, some of these might be originals while others the best of some I liked.",
+      "tags": [],
+      "minutes": 1
+    },
+    {
+      "slug": "in-for-some-brutally-honest-advice",
+      "section": "life",
+      "title": "In for some brutally honest advice?",
+      "date": "2026-11-09",
+      "updated": "2026-11-09",
+      "excerpt": "- Become successful while your parents are alive. - A man who fears pain more than failure will taste both.",
       "tags": [],
       "minutes": 1
     },
@@ -172,5 +172,5 @@
       "sample": true
     }
   ],
-  "updatedAt": "2026-11-09T16:29:47.757Z"
+  "updatedAt": "2026-11-09T16:36:36.448Z"
 }
