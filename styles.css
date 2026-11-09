@@ -298,3 +298,23 @@ img{max-width:100%;display:block}
   .minibar,.ticker,.pager,.extra,.dateline-ctrls{display:none !important}
   .page[hidden]{display:block !important}
 }
+
+
+/* ===== Aged paper (day edition only; the night edition keeps its own colours) ===== */
+:root:not([data-theme="night"]){
+  --bg:#EEE2C6; --ink:#1C1712; --sub:#4A3D2E; --rule:#B9A47F;
+  --photo:#DCCBA5; --toneA:#C2A675; --toneB:#86704E; --toneC:#3F3326;
+  --red:#8E1B13; --life:#2C5A48; --up:#2E6B3A;
+}
+:root:not([data-theme="night"]) body{
+  background-color:var(--bg);
+  background-image:url("paper-spots.svg"),url("paper-grain.svg"),
+    linear-gradient(180deg,rgba(255,250,232,.35),rgba(150,110,60,.10));
+  background-size:1500px 2100px,240px 240px,100% 100%;
+  background-position:0 0,0 0,0 0;
+}
+/* darker, slightly browned edges, like a sheet that has sat in the sun */
+:root:not([data-theme="night"]) body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  box-shadow:inset 0 0 140px rgba(110,72,28,.28),inset 0 0 22px rgba(110,72,28,.18);
+}
