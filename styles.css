@@ -318,3 +318,9 @@ img{max-width:100%;display:block}
   content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
   box-shadow:inset 0 0 140px rgba(110,72,28,.28),inset 0 0 22px rgba(110,72,28,.18);
 }
+/* photos printed on the same aged paper: warm sepia instead of grey, whites taking the paper's tone; hovering still
+   develops them to colour, kept a little warm so they don't jump to stark white */
+:root:not([data-theme="night"]) .photo-frame img{filter:grayscale(1) sepia(.45) contrast(1.05) brightness(1.04);mix-blend-mode:multiply}
+:root:not([data-theme="night"]) .photo.has-img .dots{opacity:.2}
+:root:not([data-theme="night"]) .photo:hover img{filter:sepia(.18) saturate(.92) contrast(1.02)}
+:root:not([data-theme="night"]) .post-body img{filter:sepia(.25) saturate(.9);mix-blend-mode:multiply}
