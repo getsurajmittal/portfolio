@@ -321,6 +321,7 @@ img{max-width:100%;display:block}
 /* photos printed on the same aged paper: warm sepia instead of grey, whites taking the paper's tone; hovering still
    develops them to colour, kept a little warm so they don't jump to stark white */
 :root:not([data-theme="night"]) .photo-frame img{filter:grayscale(1) sepia(.45) contrast(1.05) brightness(1.04);mix-blend-mode:multiply}
-:root:not([data-theme="night"]) .photo.has-img .dots{opacity:.2}
+/* no dot screen over real photos: it made them hard to read */
+.photo.has-img .dots{display:none}
 :root:not([data-theme="night"]) .photo:hover img{filter:sepia(.18) saturate(.92) contrast(1.02)}
 :root:not([data-theme="night"]) .post-body img{filter:sepia(.25) saturate(.9);mix-blend-mode:multiply}
