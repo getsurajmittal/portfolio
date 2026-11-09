@@ -65,7 +65,7 @@ Top-level keys are `site`, `entries`, `skills`, `letters` and `corrections`.
 
 ## How the paper renders (app.js)
 
-- Every entry is an "edition", sorted newest first. The newest is the A1 lead story, and ◀ Back issue steps through older ones.
+- Every entry is an "edition", sorted newest first by its **news date** (`newsDate`: an education entry with an `endDate` is news when completed; everything else uses `date`). The newest is the A1 lead story, and ◀ Back issue steps through older ones. Bylines, the back-issue dateline, the Morgue and the volume number all use the news date. The lead's dateline place is the entry's `location`; education and roles without one get no place rather than the site city.
 - The pages are hash-routed: `#A1` Front Page, `#A2` Features, `#A3` Opinion, `#B1` The Record. They're defined in the `PAGES` array, and routes can carry a sub-path such as `#A2/<id>`.
   - A1: lead story, profile, letters carousel. Below the fold: role and education ("From the Archives"), certifications and courses ("Public Notices"), skills ("Skills Market").
   - A2: projects and `featured` entries as case studies.

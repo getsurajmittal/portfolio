@@ -36,6 +36,10 @@
     return d.toLocaleDateString('en-GB', opts || { day: 'numeric', month: 'short', year: 'numeric' });
   }
   function year(iso) { return iso ? String(iso).slice(0, 4) : ''; }
+  /* The date a story is news: finishing a school or degree is reported when it was completed (End date), not when it
+     started. Everything else (joining a role, earning a certification…) is news on its own Date. */
+  function newsDate(e) { return e.type === 'education' && e.endDate ? e.endDate : e.date; }
+  function byNews(a, b) { return String(newsDate(b)).localeCompare(String(newsDate(a))); }
   function span(e) {
     var a = year(e.date), b = e.endDate ? year(e.endDate) : 'present';
     return a === b ? a : a + ' – ' + b;
@@ -115,7 +119,7 @@
     document.querySelectorAll('[data-brand]').forEach(function (el) { el.textContent = brand; });
     document.title = brand + ' — ' + s.name;
     if (s.accent) document.documentElement.style.setProperty('--red', s.accent);
-    var first = editions.length ? year(editions[editions.length - 1].date) : new Date().getFullYear();
+    var first = editions.length ? year(newsDate(editions[editions.length - 1])) : new Date().getFullYear();
     $('vol').textContent = String(new Date().getFullYear() - (+first) + 1);
     $('profile').textContent = s.profile || '';
 
@@ -159,7 +163,7 @@
   function renderDateline() {
     var e = editions[edIdx], long = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     $('dateText').textContent = edIdx > 0 && e
-      ? 'Back issue · ' + fmt(e.date, long)
+      ? 'Back issue · ' + fmt(newsDate(e), long)
       : D.site.city + ', ' + new Date().toLocaleDateString('en-GB', Object.assign({ timeZone: TZ }, long));
   }
 
@@ -169,7 +173,7 @@
   var postsUpdatedAt = null;
   function renderLastUpdated() {
     var stamps = [D.site.updatedAt, postsUpdatedAt].filter(function (x) { return x && !isNaN(Date.parse(x)); }).sort();
-    var days = D.entries.map(function (e) { return e.date; }).concat(POSTS.map(function (p) { return p.updated || p.date; }))
+    var days = D.entries.map(newsDate).concat(POSTS.map(function (p) { return p.updated || p.date; }))
       .filter(Boolean).sort();
     var stamp = stamps[stamps.length - 1], day = days[days.length - 1];
     var el = $('lastUpdated');
@@ -201,7 +205,8 @@
     var written = paras(e.body), ps = written.length ? written : [summary(e)];
     var first = ps[0];
     /* dateline as a small-caps lead-in, then the paragraph (no drop cap: it floated left of the dateline) */
-    var body = '<p><span class="city">' + esc((e.location || D.site.city || '').toUpperCase()) + ' — </span>' + esc(first) + '</p>' +
+    var place = e.location || (e.type === 'education' || e.type === 'role' ? '' : D.site.city || '');
+    var body = '<p>' + (place ? '<span class="city">' + esc(place.toUpperCase()) + ' — </span>' : '') + esc(first) + '</p>' +
       ps.slice(1, 3).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
     /* only promise a continuation when there is more to read */
     var more = e.type === 'column' ? written.length > 0 : (written.length > 3 || e.type === 'project' || e.featured);
@@ -215,7 +220,7 @@
       '<h2 class="headline"><span class="hl">' + esc(headline(e)) + '</span></h2>' +
       '<div class="short-rule"></div>' +
       (e.deck ? '<h3 class="deck">' + esc(e.deck) + '</h3>' : '') +
-      '<div class="byline">By ' + esc(D.site.name) + ' · ' + esc(fmt(e.date)) + '</div>' +
+      '<div class="byline">By ' + esc(D.site.name) + ' · ' + esc(fmt(newsDate(e))) + '</div>' +
       '<div class="lead-grid">' + photoHTML(e, e.imageCaption) + '<div class="np-body">' + body + '</div></div>';
   }
 
@@ -293,7 +298,7 @@
     var hasCase = c.problem || c.approach || c.result;
     var html = '<div class="label red">A2 · Features · ' + esc(KICKER[e.type] || '') + '</div>' +
       '<h2 class="feature-head">' + esc(e.type === 'project' ? 'Inside ' + e.title : headline(e)) + '</h2>' +
-      '<h3 class="feature-deck">' + esc(e.deck || '') + ' <span class="byline" style="display:block;margin:8px 0 0;font-style:normal">By ' + esc(D.site.name) + ' · ' + esc(fmt(e.date)) + '</span></h3>';
+      '<h3 class="feature-deck">' + esc(e.deck || '') + ' <span class="byline" style="display:block;margin:8px 0 0;font-style:normal">By ' + esc(D.site.name) + ' · ' + esc(fmt(newsDate(e))) + '</span></h3>';
     if (hasCase) {
       html += '<div class="case">' + [['The problem', c.problem], ['The approach', c.approach], ['The result', c.result]].filter(function (x) { return x[1]; })
         .map(function (x) { return '<div class="reveal"><div class="label">' + x[0] + '</div><p>' + esc(x[1]) + '</p></div>'; }).join('') + '</div>';
@@ -471,15 +476,15 @@
     }).join('') || '<p class="note">No honours filed yet.</p>';
 
     var years = [];
-    editions.forEach(function (e) { var y = year(e.date); if (years.indexOf(y) < 0) years.push(y); });
+    editions.forEach(function (e) { var y = year(newsDate(e)); if (years.indexOf(y) < 0) years.push(y); });
     if (!morgueYear || years.indexOf(morgueYear) < 0) morgueYear = years[0];
     $('years').innerHTML = years.map(function (y) { return '<button type="button" data-year="' + esc(y) + '" aria-pressed="' + (y === morgueYear) + '">' + esc(y) + '</button>'; }).join('');
     renderMorgue();
   }
   function renderMorgue() {
     $('morgue').innerHTML = editions.map(function (e, i) {
-      if (year(e.date) !== morgueYear) return '';
-      return '<button type="button" class="morgue-row" data-ed="' + i + '"><b>No. ' + (editions.length - i) + '</b><span>' + esc(headline(e)) + '</span><time>' + esc(fmt(e.date, { day: 'numeric', month: 'short' })) + '</time></button>';
+      if (year(newsDate(e)) !== morgueYear) return '';
+      return '<button type="button" class="morgue-row" data-ed="' + i + '"><b>No. ' + (editions.length - i) + '</b><span>' + esc(headline(e)) + '</span><time>' + esc(fmt(newsDate(e), { day: 'numeric', month: 'short' })) + '</time></button>';
     }).join('');
   }
   function countUp() {
@@ -552,7 +557,7 @@
     var last = store('gz-last');
     store('gz-last', new Date().toISOString().slice(0, 10));
     if (!last) return;
-    var fresh = editions.filter(function (e) { return String(e.date) > last; });
+    var fresh = editions.filter(function (e) { return String(newsDate(e)) > last; });
     if (!fresh.length) return;
     $('extraText').innerHTML = 'Since your last visit: <b>' + esc(headline(fresh[0])) + '</b>' + (fresh.length > 1 ? ' and ' + (fresh.length - 1) + ' more' : '') + '.';
     $('extraGo').href = '#A1';
@@ -611,7 +616,7 @@
     D = data;
     D.site = D.site || {}; D.entries = (D.entries || []).filter(function (e) { return e && e.title; });
     D.entries.forEach(function (e, i) { if (!e.id) e.id = 'e' + i; });
-    editions = D.entries.slice().sort(function (a, b) { return String(b.date).localeCompare(a.date); });
+    editions = D.entries.slice().sort(byNews);
     renderChrome(); renderLead(); renderInside(); renderLetters(); renderBelow();
     renderQuote(); watchDay(); renderLastUpdated();
     wire(); setupScroll(); route(); restartLetters(); setupExtra();
